@@ -1,0 +1,12 @@
+Degree 6: Examining System
+Degree 5: Parsing Classes
+Degree 4: Analyzing Inheritance
+Degree 3: Checking Types
+Degree 2: Generating Byte Code
+Freezing System Changes
+Degree -1: Generating Code
+
+Eiffel Compilation Succeeded
+
+Background Workbench C Compilation Launched.
+Background Workbench C Compilation Failed.
