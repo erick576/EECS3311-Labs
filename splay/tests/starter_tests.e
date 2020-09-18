@@ -48,6 +48,18 @@ feature -- make_external
 		do
 			add_boolean_case (agent tn_make_external2)
 			add_boolean_case (agent tn_make_external3)
+			add_boolean_case (agent tn_make_external4)
+		end
+
+	tn_make_external4: BOOLEAN
+		local
+			l_tree_node: TREE_NODE[INTEGER, INTEGER]
+		do
+			comment("tn_make_external4: test the parent node is attached")
+
+			create l_tree_node.make_external
+
+			Result := not attached l_tree_node.parent
 		end
 
 	tn_make_external3: BOOLEAN
@@ -77,6 +89,7 @@ feature -- make_internal
 	add_make_internal_tests
 		do
 			add_boolean_case (agent tn_make_internal3)
+--			add_violation_case_with_tag ("left_is_external", agent tn_make_internal2)
 		end
 
 	tn_make_internal3: BOOLEAN
@@ -89,6 +102,17 @@ feature -- make_internal
 
 			Result := l_tree_node.value = 1 and l_tree_node.key = 1
 		end
+
+--	tn_make_internal2
+--		local
+--			l_tree_node: TREE_NODE[INTEGER, INTEGER]
+--		do
+--			-- When you want to use this just make the implementation of make internal incorrect to invoke it
+--			comment ("tn_make_internal2: POSTCONDITION, make_internal, left_is_external")
+
+--			create l_tree_node.make_internal (1, 1)
+
+--		end
 
 feature -- set_to_internal
 
@@ -277,6 +301,20 @@ feature -- tree_search
 			add_boolean_case (agent tn_tree_search5)
 			add_boolean_case (agent tn_tree_search6)
 			add_boolean_case (agent tn_tree_search7)
+			add_boolean_case (agent tn_tree_search8)
+		end
+
+	tn_tree_search8: BOOLEAN
+		local
+			l_search_result: STRING
+		do
+			comment ("tn_tree_search8: bst_str_str, tree searches key less than minimum and bigger than maximum")
+
+			env_root_insert_str_str
+
+			l_search_result := bst_str_str.root.tree_search("g").key
+
+			Result := l_search_result ~ "g"
 		end
 
 	tn_tree_search7: BOOLEAN
