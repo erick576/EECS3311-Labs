@@ -106,7 +106,7 @@ feature -- Basic
 			root_count:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is the same as the size of subtree rooted as `root`.
-				Result = old root.deep_twin.count
+				Result = (old root.deep_twin).count
 		end
 
 	is_empty: BOOLEAN
@@ -120,7 +120,9 @@ feature -- Basic
 			empty_if_count_is_zero:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is logically equivalent to whether or not the subtree rooted at `root` is empty.
-				Result = true implies old root.count = 0
+				(Result = true and (old root.deep_twin).count = 0)
+				or
+				(Result = false and (old root.deep_twin).count > 0)
 
 		end
 
@@ -304,7 +306,7 @@ feature -- Advanced
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			-- This postcondition is completed for you. Do not modify.
 			count_is_same:
-				count = old count
+				count = (old root.deep_twin).count
 
 			case_of_key_found:
 				-- TODO: Complete this postcondition.
@@ -354,7 +356,7 @@ feature -- Advanced
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			size_incremented:
 				-- TODO: Complete this postcondition.
-				root.count = old count + 1
+				root.count = (old root.deep_twin).count + 1
 
 			has_inserted_node:
 				-- TODO: Complete this postcondition.
@@ -484,7 +486,7 @@ feature -- Advanced
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			size_decremented:
 				-- TODO: Complete this postcondition.
-				count = old count - 1
+				count = (old root.deep_twin).count - 1
 
 			has_removed_node:
 				-- TODO: Complete this postcondition.

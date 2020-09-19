@@ -747,7 +747,7 @@ feature -- Conversion
 				-- Hint 1: the tree rooted at Current **before** calling `nodes` has
 				-- the same structure (defined by `is_same_tree`) as that **after** calling `nodes`.
 				-- Hint 2: Invoking `is_same_tree(node)` is effectively invoking `Current.is_same_tree(node)`.
-				is_same_tree (old Current)
+				is_same_tree (old Current.deep_twin)
 		end
 
 feature -- Helper features for postconditions
