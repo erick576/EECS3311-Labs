@@ -424,7 +424,7 @@ feature -- Status Query
 				-- TODO: Complete this postcondition.
 				-- Hint: the return value of this query (`Result`) is the same as the size
 				-- of the linear version (`nodes`) of the tree rooted at `Current`.
-				old Current.nodes.count = Result
+				old Current.deep_twin.nodes.count = Result
 		end
 
 	min_node: TREE_NODE[K, V]
@@ -739,7 +739,7 @@ feature -- Conversion
 				across
 					1 |..| (nodes.count - 1) is i
 				all
-					nodes[i] <= nodes[i+1]
+					nodes[i] < nodes[i+1]
 				end
 
 			no_tree_structure_changed:

@@ -106,7 +106,7 @@ feature -- Basic
 			root_count:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is the same as the size of subtree rooted as `root`.
-				Result = old root.count
+				Result = old root.deep_twin.count
 		end
 
 	is_empty: BOOLEAN

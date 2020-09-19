@@ -45,6 +45,12 @@
 			<file_rule>
 				<exclude>^post_cond_test$</exclude>
 			</file_rule>
+			<file_rule>
+				<exclude>^postconditions$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^postconditions$</exclude>
+			</file_rule>
 		</cluster>
 		<cluster name="trees" location=".\trees\" recursive="true"/>
 	</target>

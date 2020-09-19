@@ -3,97 +3,85 @@
 <base target="main">
 </head>
 <body>
-<p align="center"><b>Test Run:09/19/2020   3:40:11.964 PM</b></p><font color="blue"><H2  align="center">EXAMPLE_TESTS</H2></font><p align="center">Note: * indicates a violation test case</p>
+<p align="center"><b>Test Run:09/19/2020   3:40:11.999 PM</b></p><font color="blue"><H2  align="center">TREE_NODE_POST_TESTS</H2></font><p align="center">Note: * indicates a violation test case</p>
 <table border=1 align="center">
-<tr><td bgcolor="#00FF00" colspan="3">&nbsp;</td></tr><tr><td align="center" colspan="3">PASSED (19 out of 19)</td></tr>
+<tr><td bgcolor="#00FF00" colspan="3">&nbsp;</td></tr><tr><td align="center" colspan="3">PASSED (16 out of 16)</td></tr>
 <tr><td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Case Type</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Passed</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Total</b></font></td></tr>
 <tr><td align="center"><font color="blue"><b>Violation</b></font></td>
-<td align="center">0</td><td align="center">0</td></tr>
+<td align="center">16</td><td align="center">16</td></tr>
 <tr><td align="center"><font color="blue"><b>Boolean</b></font></td>
-<td align="center">19</td><td align="center">19</td></tr>
+<td align="center">0</td><td align="center">0</td></tr>
 <tr><td align="center"><font color="blue"><b>All Cases</b></font></td>
-<td align="center">19</td><td align="center">19</td></tr>
+<td align="center">16</td><td align="center">16</td></tr>
 <tr><td align="center" bgcolor="#000080"><font color="#FFCC00"><b>State</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Contract Violation</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Test Name</b></font></td></tr>
 <tr><td bgcolor="#008080" align="center"><font color="#FFCC00"><b>Test1</b></font></td>
-<td bgcolor="#008080" align="center" colspan="2"><font color="#FFCC00">EXAMPLE_TESTS</font></td></tr><tr><td><font color="green"><b>PASSED</b></font></td>
+<td bgcolor="#008080" align="center" colspan="2"><font color="#FFCC00">TREE_NODE_POST_TESTS</font></td></tr><tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_rotate1: env_empty, insert two, rotate from node 2</td>
+<td>*tn_no_parent: POSTCONDITION, no_parent</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_rotate2: env_empty, insert nine, with many rotations</td>
+<td>*tn_left_is_external_test: POSTCONDITION, left_is_external</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_splay1: splay, zig-zig</td>
+<td>*tn_left_is_assigned: POSTCONDITION, left_is_assigned</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_splay2: env_empty, insert 9 nodes, splay 1, tree structure</td>
+<td>*tn_keep_left_parent_reference: POSTCONDITION, keep_left_parent_reference</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_search1: env_root_insert_str_str, search 'g'</td>
+<td>*tn_right_is_external: POSTCONDITION, right_is_external</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_search2: env_root_insert_int_int, search '5'</td>
+<td>*tn_right_is_assigned: POSTCONDITION, right_is_assigned</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_search1: env_empty, insert 9 nodes, search node 1, tree structure</td>
+<td>*tn_keep_right_parent_reference: POSTCONDITION, keep_right_parent_reference</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_insert1: env_empty, insert 1, check the root's key</td>
+<td>*tn_correct_result: POSTCONDITION, correct_result</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete1: env_empty, insert 1, delete 1, check its count</td>
+<td>*tn_left_external_means_current_is_minimum: POSTCONDITION, left_external_means_current_is_minimum</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete2: env_empty, insert 1 & 2, delete 1, check its count</td>
+<td>*tn_result_is_minimum_in_this_subtree: POSTCONDITION, result_is_minimum_in_this_subtree</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete3: env_empty, insert 9 nodes, delete node 1, tree structure</td>
+<td>*tn_right_external_means_current_is_maximum: POSTCONDITION, right_external_means_current_is_maximum</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete4: env_empty, insert 9 nodes, delete node 2, tree structure</td>
+<td>*tn_result_is_maximum_in_this_subtree: POSTCONDITION, result_is_maximum_in_this_subtree</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete5: env_empty, insert 9 nodes, delete node 3, tree structure</td>
+<td>*tn_case_of_key_found: POSTCONDITION, case_of_key_found</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete6: env_empty, insert 9 nodes, delete node 4, tree structure</td>
+<td>*tn_case_of_key_not_found: POSTCONDITION, case_of_key_not_found</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete7: env_empty, insert 9 nodes, delete node 5, tree structure</td>
+<td>*tn_correct_search_result: POSTCONDITION, correct_search_result</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>splay_delete8: env_empty, insert 9 nodes, delete node 6, tree structure</td>
-</tr>
-<tr><td><font color="green"><b>PASSED</b></font></td>
-<td align="center">NONE</td>
-<td>splay_delete9: env_empty, insert 9 nodes, delete node 7, tree structure</td>
-</tr>
-<tr><td><font color="green"><b>PASSED</b></font></td>
-<td align="center">NONE</td>
-<td>splay_delete10: env_empty, insert 9 nodes, delete node 8, tree structure</td>
-</tr>
-<tr><td><font color="green"><b>PASSED</b></font></td>
-<td align="center">NONE</td>
-<td>splay_delete11: env_empty, insert 9 nodes, delete node 9, tree structure</td>
+<td>*tn_inorder_means_result_is_sorted_incrementally: POSTCONDITION, <br>inorder_means_result_is_sorted_incrementally </td>
 </tr>
 </table></body>
 </html>

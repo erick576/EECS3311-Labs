@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		do
 			add_test (create {STARTER_TESTS}.make)
 			add_test (create {EXAMPLE_TESTS}.make)
+			add_test (create {TREE_NODE_POST_TESTS}.make)
 
 			show_browser
 			run_espec
