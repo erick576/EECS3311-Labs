@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 feature -- boolean tests
 	t_always_passes: BOOLEAN
 		do
-			comment("t_always: a test always passing")
+			comment("t_always_passes: a test always passing")
 			Result := true
 			-- Return Result
 		end
@@ -129,7 +129,7 @@ feature -- violation tests
 	local
 		bd: BIRTHDAY
 	do
-		comment("t_precondition_birthday_make: test that the precondition with tag valid_combination is violated as expected")
+		comment("t_precond_brithday_make: test that the precondition with tag valid_combination is violated as expected")
 		-- Since we are expecting a violation to occur
 		-- you only have to write lines of code that will lead to that particular violation
 		create bd.make (11, 31)
