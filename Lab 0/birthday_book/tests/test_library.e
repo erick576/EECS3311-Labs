@@ -20,7 +20,7 @@ feature -- Constructor
 			add_boolean_case (agent test_arrays)
 			add_boolean_case (agent test_lists)
 			add_boolean_case (agent test_across_loops)
-			add_boolean_case (agent test_quanifications)
+			add_boolean_case (agent test_quantifications)
 		end
 
 feature -- boolean tests
@@ -242,11 +242,11 @@ feature -- boolean tests
 		end
 
 
-	test_quanifications: BOOLEAN
+	test_quantifications: BOOLEAN
 		local
 			a: ARRAY[STRING]
 		do
-			comment("test_quanifications: use of across as boolean expression")
+			comment("test_quantifications: use of across as boolean expression")
 
 			Result :=
 				not (across

@@ -167,7 +167,7 @@ feature -- Command
 			name_added_to_end:
 				names[count] ~ name
 
-			brithday_added_to_end:
+			birthday_added_to_end:
 				birthdays[count] ~ birthday
 		end
 
