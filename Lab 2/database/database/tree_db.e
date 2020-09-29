@@ -53,6 +53,9 @@ feature -- Abstraction Function
 			-- The public, abstract view of a `DATABASE`.
 			-- This is the so-called `abstraction function` which
 			-- converts/promotes the implementation (i.e., `bst`) to a mathematical object (i.e., `REL`).
+		local
+			tuple_array : ARRAY[TUPLE[K, V]]
+			tuple : TUPLE[K, V]
 		do
 			-- TODO: Implement this abstraction function
 			-- You are expeced to explore the available queries/commands of the REL class in MATHMODELS.
@@ -61,18 +64,33 @@ feature -- Abstraction Function
 
 			create Result.make_empty -- This first line of implementation is given to you.
 
+			create tuple_array.make_empty
+			across
+				bst.nodes as cursor
+			loop
+				create tuple.default_create
+				if attached cursor.item.key as p_key then
+					if attached bst.search (p_key) as p_val then
+						tuple := [p_key, p_val]
+						tuple_array.force (tuple, tuple_array.count + 1)
+					end
+				end
+			end
+
+			Result.make_from_tuple_array (tuple_array)
+
 		-- Implicitly, postcondition from `{DATABASE}.model` is inherited here.
 		end
 
 -- TODO: Remove comments from the inherit clause below to start implementing the iterator pattern.
---feature -- Iterator Cursor
+feature -- Iterator Cursor
 
---	new_cursor: ITERATION_CURSOR [TUPLE[key: K; value: V]]
---			-- Returns an iteration cursor for the current class.
---		do
---			-- This implementation is given to you. Do not modify.
---			create {TREE_IT[K, V]} Result.make(Current)
---		end
+	new_cursor: ITERATION_CURSOR [TUPLE[key: K; value: V]]
+			-- Returns an iteration cursor for the current class.
+		do
+			-- This implementation is given to you. Do not modify.
+			create {TREE_IT[K, V]} Result.make(Current)
+		end
 
 feature -- Implementation of Deferred Routines from `DATABASE`
 

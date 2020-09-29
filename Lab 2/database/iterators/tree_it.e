@@ -18,6 +18,8 @@ feature {NONE} -- Initialization
 	make (p_db: TREE_DB[K, V])
 		do
 			-- TODO: Complete this implementation.
+			pairs := p_db.model.as_array
+			cursor_pos := pairs.upper
 		end
 
 feature -- Access
@@ -26,6 +28,8 @@ feature -- Access
 			-- Item at current cursor position.
 		do
 			-- TODO: Complete this implementation.
+			create Result
+			Result := pairs[cursor_pos]
 		end
 
 feature -- Status report	
@@ -34,6 +38,7 @@ feature -- Status report
 			-- Are there no more items to iterate over?
 		do
 			-- TODO: Complete this implementation.
+			Result := (cursor_pos < pairs.lower)
 		end
 
 feature -- Cursor movement
@@ -42,6 +47,12 @@ feature -- Cursor movement
 			-- Move to next position.
 		do
 			-- TODO: Complete this implementation.
+			cursor_pos := cursor_pos - 1
 		end
+
+feature {NONE} -- Underlying Values
+
+	pairs : ARRAY[TUPLE[K,V]]
+	cursor_pos : INTEGER
 
 end

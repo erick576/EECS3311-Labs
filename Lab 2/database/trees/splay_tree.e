@@ -68,12 +68,15 @@ feature -- Basic
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
 			-- Hint: A splay tree has its root of type `TREE_NODE`.
+			Result := root.has (p_key)
 
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			root_has_the_node_with_the_p_key:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is logically equivalent to whether or not `p_key` exists in the current tree.
-				True
+				(Result = True and (across root.nodes is i some i.key ~ p_key end))
+				or
+				(Result = False and (across root.nodes is i all i.key /~ p_key end))
 		end
 
 	has_node (p_node: TREE_NODE[K,V]): BOOLEAN
@@ -81,12 +84,15 @@ feature -- Basic
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
 			-- Hint: A splay tree has its root of type `TREE_NODE`.
+			Result := root.has_node (p_node)
 
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			root_has_the_p_node:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is logically equivalent to whether or not `p_node` exists in the current tree.
-				True
+				(Result = True and (across root.nodes is i some i ~ p_node end))
+				or
+				(Result = False and (across root.nodes is i all i /~ p_node end))
 		end
 
 	count: INTEGER
@@ -94,12 +100,13 @@ feature -- Basic
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
 			-- Hint: A splay tree has its root of type `TREE_NODE`.
+			Result := root.count
 
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			root_count:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is the same as the size of subtree rooted as `root`.
-				True
+				Result = (old root.deep_twin).count
 		end
 
 	is_empty: BOOLEAN
@@ -107,12 +114,15 @@ feature -- Basic
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
 			-- Hint: When is this tree empty?
+			Result := root.count = 0
 
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			empty_if_count_is_zero:
 				-- TODO: Complete this postcondition.
 				-- Hint: Return value is logically equivalent to whether or not the subtree rooted at `root` is empty.
-				True
+				(Result = true and (old root.deep_twin).count = 0)
+				or
+				(Result = false and (old root.deep_twin).count > 0)
 		end
 
 	relink (p_parent, p_child: TREE_NODE[K, V]; p_make_left_child: BOOLEAN)
@@ -120,18 +130,25 @@ feature -- Basic
 			-- Otherwise, replace `p_child` as the right child of `p_parent`.
 		do
 			-- TODO: Complete the implementation so that the postcondition is satisfied.
+			if p_make_left_child = True then
+				p_parent.set_left (p_child)
+				p_child.set_parent (p_parent)
+			else
+				p_parent.set_right (p_child)
+				p_child.set_parent (p_parent)
+			end
 
 		ensure
 			childs_parent_is_linked:
 				-- TODO: Complete this postcondition.
 				-- Hint: `p_child`'s parent must be consistent.
-				True
+				p_child.parent = p_parent
 			case_of_relinking_the_left_child:
 				-- TODO: Complete this postcondition.
-				True
+				p_make_left_child = True implies p_parent.left = p_child
 			case_of_relinking_the_right_child:
 				-- TODO: Complete this postcondition.
-				True
+				p_make_left_child = False implies p_parent.right = p_child
 		end
 
 feature -- Intermediate
@@ -147,10 +164,125 @@ feature -- Intermediate
 			-- These preconditions are given to you. Do not modify them.
 			has_a_parent_to_rotate:
 				attached p_node.parent
+		local
+			holder : TREE_NODE[K, V]
 		do
 			-- TODO: Complete the implementation.
 			-- Hint: Refer to the `Problem` and `Tutorials` sections of your lab instructions for details.
+			if attached p_node.parent as a_parent then
+				-- Do a left rotation
+				if a_parent.right = p_node then
 
+					 --	Using This to Visualize the rotation
+					 --     |							
+					 --		a						
+					 --    / \							
+					 --   T1  p_node					
+					 --      /  \
+					 --     T2   c
+					 --         / \
+					 --       T3   T4
+					 --          |
+					 --          |
+					 --          V
+					 --
+					 --          |						
+					 --		   p_node
+					 --        /   \
+					 --       a     c
+					 --      / \   / \
+					 --     T1 T2 T3 T4
+
+
+					 --	Set the right of a to T2
+					 holder := a_parent
+			         holder.set_right(p_node.left)
+
+					 -- Update the parent of T2
+			         if attached p_node.left as a_left then
+			            a_left.set_parent(holder)
+			         end
+
+					 -- If the parent of a is null just set the new root p_node's parent to null
+			         if not attached holder.parent as g_parent then
+			            p_node.set_parent(void)
+
+					 --	If a's parent is not null then we need to link the new root p_node to the parent of a
+			         else
+			         	-- Depending on whether a was the left or right child of its parent will determine what new node to set to p_node
+			            p_node.set_parent(holder.parent)
+			            if attached holder.parent as g_parent_2 then
+			            	if holder = g_parent_2.left then
+			               		g_parent_2.set_left(p_node)
+			            	else
+			               		g_parent_2.set_right(p_node)
+			            	end
+			            end
+			         end
+			         -- Now we reattach the node a which we stored earlier to the new root
+			         p_node.set_left(holder)
+			         holder.set_parent(p_node)
+
+				-- Do a right rotation
+				else
+
+					 --	Using This to Visualize the rotation
+					 --          |					
+					 --		     c					
+					 --         / \			
+					 --     p_node T4			
+					 --      /  \
+					 --     a    T3
+					 --    / \
+					 --   T1 T2
+					 --          |
+					 --          |
+					 --          V
+					 --
+					 --          |						
+					 --		   p_node
+					 --        /   \
+					 --       a     c
+					 --      / \   / \
+					 --     T1 T2 T3 T4
+
+
+					 --	Set the left of c to T3
+					 holder := a_parent
+			         holder.set_left(p_node.right)
+
+					 -- Update the parent of T3
+			         if attached p_node.right as a_right then
+			            a_right.set_parent(holder)
+			         end
+
+					 -- If the parent of c is null just set the new root p_node's parent to null
+			         if not attached holder.parent as g_parent then
+			            p_node.set_parent(void)
+
+					 --	If c's parent is not null then we need to link the new root p_node to the parent of c
+			         else
+			         	-- Depending on whether c was the left or right child of its parent will determine what new node to set to p_node
+			            p_node.set_parent(holder.parent)
+			            if attached holder.parent as g_parent_2 then
+			            	if holder = g_parent_2.left then
+			               		g_parent_2.set_left(p_node)
+			            	else
+			               		g_parent_2.set_right(p_node)
+			            	end
+			            end
+			         end
+			         -- Now we reattach the node c which we stored earlier to the new root
+			         p_node.set_right(holder)
+			         holder.set_parent(p_node)
+
+				end
+			end
+
+			-- Reset root if applicable for splay loop to not run infinetly
+			if not attached p_node.parent then
+				root := p_node
+			end
 		end
 
 	splay(p_node: TREE_NODE[K,V])
@@ -159,7 +291,46 @@ feature -- Intermediate
 		do
 			-- TODO: Complete the implementation.
 			-- Hint: Refer to the `Problem` and `Tutorials` sections of your lab instructions for details.
+			from
 
+			until
+				-- Case 1: If parent dosent exist do nothing
+				p_node.parent = void
+			loop
+				-- Case 2: Assume grand parent dosent exist but parent exists
+				if attached p_node.parent as a_parent then
+					if not attached a_parent.parent as g_parent then
+						rotate(p_node)
+					end
+				end
+
+				-- Case 3 and 4: Assume that grand parent and parent exists
+				if attached p_node.parent as a_parent then
+					if attached a_parent.parent as g_parent then
+						if g_parent.right = a_parent and a_parent.right = p_node then
+
+							rotate(a_parent)
+							rotate(p_node)
+
+						elseif g_parent.left = a_parent and a_parent.left = p_node then
+
+							rotate(a_parent)
+							rotate(p_node)
+
+						elseif g_parent.left = a_parent and a_parent.right = p_node then
+
+							rotate(p_node)
+							rotate(p_node)
+
+						elseif g_parent.right = a_parent and a_parent.left = p_node then
+
+							rotate(p_node)
+							rotate(p_node)
+
+						end
+					end
+				end
+			end
 		end
 
 feature -- Advanced
@@ -172,7 +343,16 @@ feature -- Advanced
 			-- Hint 2: The current tree after a successful search should be restructured
 			-- 		so that more frequently accessed nodes are brought closer to the root.
 			-- Hint 3: Refer to the `Problem` and `Tutorials` sections of your lab instructions for details.
-			Result := root.value
+			if root.tree_search (p_key).is_internal then
+				splay(root.tree_search (p_key))
+				Result := root.value_search (p_key)
+
+				else
+					if attached root.tree_search (p_key).parent as a_parent then
+						splay(a_parent)
+					end
+					Result := root.value_search (p_key)
+			end
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			-- This postcondition is completed for you. Do not modify.
 			count_is_same:
@@ -182,13 +362,15 @@ feature -- Advanced
 				-- TODO: Complete this postcondition.
 				-- Hint: If `p_key` exists within the subtree rooted at `Current`,
 				-- 		the result must be the value of the node we searched.
-				True
+				(across Current.nodes is i some (i.value = Result and i.key ~ p_key) end)
+				or
+				(across Current.nodes is i all (i.value /= Result and i.key /~ p_key) end)
 
 			case_of_key_not_found:
 				-- TODO: Complete this postcondition.
 				-- Hint: If `p_key` does not exist within the subtree rootd at `Current`,
 				-- 		the result must be the value of the node that does not explicitly hold a value.
-				True
+				Current.root.is_external implies Current.root.value = Result
 
 			consistent_in_orders:
 				-- TODO: Complete this postcondition.
@@ -200,7 +382,7 @@ feature -- Advanced
 				-- 		   Otherwise, `list1` ~ `list2` will only compare references of their stored items.
 				-- Hint 3. Rather than comparing two lists directly using ~, you may write a
 				--		   logical quantification (universal or existential) to compare them.
-				True
+				(old root.deep_twin).nodes ~ root.nodes
 		end
 
 	insert (p_key: K; p_value: V)
@@ -215,21 +397,31 @@ feature -- Advanced
 		do
 			-- TODO: Implement this command so that the postcondition is satisfied.
 			-- Hint: Refer to the `Problem` and `Tutorials` sections of your lab instructions for details.
+			if not root.has (p_key) then
+				root.tree_search (p_key).set_to_internal (p_key, p_value)
+				splay(root.tree_search (p_key))
+			end
 
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			size_incremented:
 				-- TODO: Complete this postcondition.
-				True
+				root.count = (old root.deep_twin).count + 1
 
 			has_inserted_node:
 				-- TODO: Complete this postcondition.
-				True
+				root.tree_search (p_key).is_internal
 
 			other_nodes_unchanged:
 				-- TODO: Complete this postcondition.
 				-- Hint 1: Consider comparing the old list of `nodes` (from an in-order traversal) with the new list of `nodes`.
 				-- Hint 2: Every node except the one that was inserted should be same.
-				True
+				across (old root.deep_twin).nodes is i
+				all
+					across root.nodes is j
+					some
+						i ~ j or p_key ~ j.key
+					end
+			    end
 		end
 
 	delete (p_key: K)
@@ -238,24 +430,129 @@ feature -- Advanced
 		-- 		A node with the key `p_key` exists.
 		-- 		This node is an internal node.
 		-- See the precondition of `{BALANCED_BST}.delete`.
+		local
+			node: TREE_NODE[K,V]
+			holder: TREE_NODE[K,V]
+			n_pred: TREE_NODE[K,V]
 		do
 			-- TODO: Implement this command so that the postcondition is satisfied.
 			-- Hint: Refer to the `Problem` and `Tutorials` sections of your lab instructions for details.
+			node := root.tree_search (p_key)
+			if node.is_internal then
+				splay(node)
+				if attached node.left as a_left then
+					if attached node.right as a_right then
+						if root.nodes.valid_index (root.nodes.index_of (root.tree_search (p_key), 1) - 1) then
+							n_pred := root.nodes[root.nodes.index_of (root.tree_search (p_key), 1) - 1]
+						end
+						if a_left.is_external and a_right.is_external then
+							if attached node.parent as a_parent then
+								if a_parent.left = node then
+									a_parent.set_left (create {TREE_NODE[K,V]}.make_external)
+									if attached a_parent.left as a_parent_left then
+										a_parent_left.set_parent (a_parent)
+									end
+								else
+									a_parent.set_right (create {TREE_NODE[K,V]}.make_external)
+									if attached a_parent.right as a_parent_right then
+										a_parent_right.set_parent (a_parent)
+									end
+								end
+							else
+								root := create {TREE_NODE[K,V]}.make_external
+							end
+
+						elseif a_left.is_external and a_right.is_internal then
+							if attached node.parent as a_parent then
+								if a_parent.left = node then
+									a_parent.set_left (a_right)
+									if attached a_parent.left as a_parent_left then
+										a_parent_left.set_parent (a_parent)
+									end
+								else
+									a_parent.set_right (a_right)
+									if attached a_parent.right as a_parent_right then
+										a_parent_right.set_parent (a_parent)
+									end
+								end
+							else
+								root := a_right
+								root.set_parent (void)
+							end
+
+						elseif a_left.is_internal and a_right.is_external then
+							if attached node.parent as a_parent then
+								if a_parent.left = node then
+									a_parent.set_left (a_left)
+									if attached a_parent.left as a_parent_left then
+										a_parent_left.set_parent (a_parent)
+									end
+								else
+									a_parent.set_right (a_left)
+									if attached a_parent.right as a_parent_right then
+										a_parent_right.set_parent (a_parent)
+									end
+								end
+							else
+								root := a_left
+								root.set_parent (void)
+							end
+
+						elseif a_left.is_internal and a_right.is_internal then
+							holder := a_right
+							if attached node.parent as a_parent then
+								if a_parent.left = node then
+									a_parent.set_left (a_left)
+									if attached a_parent.left as a_parent_left then
+										a_parent_left.set_parent (a_parent)
+									end
+								else
+									a_parent.set_right (a_left)
+									if attached a_parent.right as a_parent_right then
+										a_parent_right.set_parent (a_parent)
+									end
+								end
+							else
+								root := a_left
+								root.set_parent (void)
+							end
+
+							if attached n_pred then
+								splay (n_pred)
+								n_pred.set_right (holder)
+								holder.set_parent (n_pred)
+
+							else
+								root.set_right (holder)
+								holder.set_parent (root)
+							end
+						end
+					end
+				end
+			end
 
 		ensure then -- In a descendant class, a `then` is needed after `ensure`. This is called sub-contracting, and we will learn about this later.
 			size_decremented:
 				-- TODO: Complete this postcondition.
-				True
+				count = (old root.deep_twin).count - 1
 
 			has_removed_node:
 				-- TODO: Complete this postcondition.
-				True
+				root.tree_search (p_key).is_external
 
 			other_nodes_unchanged:
 				-- TODO: Complete this postcondition.
 				-- Hint: Consider comparing the old list of `nodes` (from an in-order traversal) with the new list of `nodes`.
 				--		 Every node except the one that was deleted should be same.
-				True
+				across (old root.deep_twin).nodes is i
+				all
+					i.key /~ p_key
+					implies
+					(across root.nodes is j
+					some
+						i ~ j
+					end)
+			    end
 		end
 
 feature -- Out

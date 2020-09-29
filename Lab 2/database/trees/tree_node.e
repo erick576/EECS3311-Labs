@@ -80,7 +80,7 @@ feature {TREE_NODE, ES_TEST} -- Initialization
 				not attached right
 			no_parent:
 				-- TODO: complete this postcondition.
-				True
+				not attached parent
 		end
 
 	make_internal (p_key: K; p_value: V)
@@ -119,12 +119,24 @@ feature {TREE_NODE, ES_TEST} -- Initialization
 				-- Hint: `left` is detachable, so for void safety, the compiler
 				-- would not allow you to call `left.is_external` directly.
 				-- You'd need to make sure that `left`, the call target, is not void.
-				True
+				attached left as a_left
+					and then
+					(
+						not attached a_left.left
+						and
+						not attached a_left.right
+					)
 
 			right_is_external:
 				-- TODO: complete this postcondition.
 				-- Hint: See above.
-				True
+				attached right as a_right
+					and then
+					(
+						not attached a_right.right
+						and
+						not attached a_right.left
+					)
 
 			result_node_is_internal:
 				is_internal
@@ -250,6 +262,7 @@ feature -- Status setting
 			-- Hints: You must transform the external `Current` node to an internal node that has
 			--		  `p_key` and `p_value`. Think about the difference between the definition of
 			-- 		  an internal node and an external node. Make sure to satisfy the postconditions.
+			Current.make_internal (p_key, p_value)
 
 		ensure
 			-- These postconditions are completed for you. Do not modify.
@@ -274,20 +287,37 @@ feature -- Insertion
 			left_is_external:
 				-- TODO: Complete this precondition.
 				-- Hint: left child must be external.
-				True
+				attached left as a_left
+					and then
+					(
+						not attached a_left.left
+						and
+						not attached a_left.right
+					)
 		do
 			-- TODO: Implement this command so that the postcondition is satisfied.
+			Current.set_left (p_node)
+
+			if
+				attached left as a_left
+			then
+				a_left.parent := Current
+			end
 
 		ensure
 			left_is_assigned:
 				-- TODO: Complete this postcondition.
 				-- Hint: `Current`'s left child must be `p_node`.
-				True
+				Current.left = p_node
 
 			keep_left_parent_reference:
 				-- TODO: Complete this postcondition.
 				-- Hint: The left child keeps its parent reference correctly.
-				True
+				attached left as a_left
+					and then
+					(
+						a_left.parent = Current
+					)
 		end
 
 	insert_right (p_node: like Current)
@@ -303,20 +333,37 @@ feature -- Insertion
 			right_is_external:
 				-- TODO: Complete this precondition.
 				-- Hint: right child must be external.
-				True
+				attached right as a_right
+					and then
+					(
+						not attached a_right.left
+						and
+						not attached a_right.right
+					)
 		do
 			-- TODO: Implement this command so that the postcondition is satisfied.
+			Current.set_right (p_node)
+
+			if
+				attached right as a_right
+			then
+				a_right.parent := Current
+			end
 
 		ensure
 			right_is_assigned:
 				-- TODO: Complete this postcondition.
 				-- Hint: `Current`'s right child must be `p_node`.
-				True
+				Current.right = p_node
 
 			keep_right_parent_reference:
 				-- TODO: Complete this postcondition.
 				-- Hint: The right child keeps its parent reference correctly.
-				True
+				attached right as a_right
+					and then
+					(
+						a_right.parent = Current
+					)
 		end
 
 feature -- Status Query
@@ -348,13 +395,36 @@ feature -- Status Query
 			-- Descendants include itself (if internal) and internal nodes.
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
+			if
+				is_external
+			then
+				Result := 0
+			end
+
+			if
+				not is_external
+			then
+				Result := 1
+			end
+
+			if
+				attached right as a_right
+			then
+				Result := Result + a_right.count
+			end
+
+			if
+				attached left as a_left
+			then
+				Result:= Result + a_left.count
+			end
 
 		ensure
 			correct_result:
 				-- TODO: Complete this postcondition.
 				-- Hint: the return value of this query (`Result`) is the same as the size
 				-- of the linear version (`nodes`) of the tree rooted at `Current`.
-				True
+				old Current.deep_twin.nodes.count = Result
 		end
 
 	min_node: TREE_NODE[K, V]
@@ -364,17 +434,43 @@ feature -- Status Query
 				not is_external
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
-			create Result.make_external
+			Result := Current
+			if
+				attached left as a_left
+			then
+				if
+					attached a_left.left as a_left_left
+				then
+					Result:= a_left.min_node
+				end
+			end
+
 		ensure
 			left_external_means_current_is_minimum:
 				-- TODO: Complete this postcondition.
-				-- Hint: `left` being external means `Current` is the `Result`.
-				True
+				-- Hint: `left` being external means `Current` is a leaf node.
+				(attached left as a_left
+					and then
+					(
+						not attached a_left.left
+						and
+						not attached a_left.right
+					)
+				)
+				implies
+				(attached right as a_right
+					and then
+					(
+						not attached a_right.left
+						and
+						not attached a_right.right
+					)
+				)
 
 			result_is_minimum_in_this_subtree:
 				-- TODO: Complete this postcondition.
 				-- Hint: the `Result` is the smallest node among all the descendants.
-				True
+				across Current.nodes is i all Result <= i end
 
 			result_is_internal:
 				-- This postcondition is completed for you. Do not modify.
@@ -388,17 +484,43 @@ feature -- Status Query
 				not is_external
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
-			create Result.make_external
+		Result := Current
+			if
+				attached right as a_right
+			then
+				if
+					attached a_right.right as a_right_right
+				then
+					Result:= a_right.max_node
+				end
+			end
+
 		ensure
 			right_external_means_current_is_maximum:
 				-- TODO: Complete this postcondition.
-				-- Hint: `right` being external means `Current` is the `Result`.
-				True
+				-- Hint: `right` being external means `Current` is a leaf node.
+				(attached right as a_right
+					and then
+					(
+						not attached a_right.left
+						and
+						not attached a_right.right
+					)
+				)
+				implies
+				(attached left as a_left
+					and then
+					(
+						not attached a_left.left
+						and
+						not attached a_left.right
+					)
+				)
 
 			result_is_maximum_in_this_subtree:
 				-- TODO: Complete this postcondition.
 				-- Hint: the `Result` is the biggest node among all the descendants.
-				True
+				across Current.nodes is i all Result >= i end
 
 			result_is_internal:
 				-- This postcondition is completed for you. Do not modify.
@@ -418,18 +540,43 @@ feature -- Status report
 			-- Case 2: Current node's key matches `p_key`.
 			-- Case 3: Current node's key is bigger than `p_key`.
 			-- Case 4: Current node's key is smaller than `p_key`.
-			create Result.make_external
+			Result := Current
+			if is_external then Result := Current end
+			if is_internal then
+				if Current.key ~ p_key then
+					Result := Current
+				end
+
+				if
+					attached key as a_key
+				then
+					if p_key < a_key then
+						if attached Current.left as a_current then
+							Result := a_current.tree_search (p_key)
+						end
+					end
+
+					if p_key > a_key then
+						if attached Current.right as a_current then
+							Result := a_current.tree_search (p_key)
+						end
+					end
+				end
+			end
+
 		ensure
 			case_of_key_found:
 				-- TODO: Complete this postcondition.
 				-- Hint: When we found the node, the result must be the current node due to the recursive
 				-- nature of this query.
-				True
+				(across Current.nodes is i some (i = Result and i.key ~ p_key) end)
+				 or
+				(across Current.nodes is i all (i /= Result and i.key /~ p_key) end)
 
 			case_of_key_not_found:
 				-- TODO: Complete this postcondition.
 				-- Hint: If the node is external, it means the `Result` must be the current node.
-				True
+				Current.is_external implies Current = Result
 
 		end
 
@@ -439,13 +586,38 @@ feature -- Status report
 		do
 			-- TODO: Implement this query so that the postcondition is satisfied.
 			-- Hint: Think of various cases of search for `p_key`.
+			Result := Current.value
+			if is_external then Result := Current.value end
+			if is_internal then
+				if Current.key ~ p_key then
+					Result := Current.value
+				end
+
+				if
+					attached key as a_key
+				then
+					if p_key < a_key then
+						if attached Current.left as a_current then
+							Result := a_current.value_search (p_key)
+						end
+					end
+
+					if p_key > a_key then
+						if attached Current.right as a_current then
+							Result := a_current.value_search (p_key)
+						end
+					end
+				end
+			end
 
 		ensure
 			case_of_key_found:
 				-- TODO: Complete this postcondition.
 				-- Hint: `p_key` existing means that the return value is same as one we find within
 				-- 		 the same tree.
-				True
+				(across Current.nodes is i some (i.value = Result and i.key ~ p_key) end)
+				or
+				(across Current.nodes is i all (i.value /= Result and i.key /~ p_key) end)
 
 			-- We do not worry about specifying the other case (`case_of_key_not_found`).
 			-- As an optional exercise, you are encouraged to think about how you might write it.
@@ -457,12 +629,37 @@ feature -- Status report
 		do
 			-- TODO: Implement this command so that the postcondition is satisfied.
 			-- Hint: Think of various cases of search for `p_key`.
+			Result := False
+			if is_external then Result := False end
+			if is_internal then
+				if Current.key ~ p_key then
+					Result := True
+				end
+
+				if
+					attached key as a_key
+				then
+					if p_key < a_key then
+						if attached Current.left as a_current then
+							Result := a_current.has (p_key)
+						end
+					end
+
+					if p_key > a_key then
+						if attached Current.right as a_current then
+							Result := a_current.has (p_key)
+						end
+					end
+				end
+			end
 
 		ensure
 			correct_search_result:
 				-- TODO: Complete this postcondition.
 				-- Hint: Result must be same as if we found the `p_key` from subtree rooted at `Current`.
-				True
+				(Current.tree_search (p_key).key ~ p_key and Result = True)
+				or
+				(Current.tree_search (p_key).is_external and Result = False)
 		end
 
 	has_node (p_node: TREE_NODE[K,V]): BOOLEAN
@@ -472,12 +669,37 @@ feature -- Status report
 		do
 			-- TODO: Implement this command so that the postcondition is satisfied.
 			-- Hint: You may use previous queries.
+			Result := False
+			if is_external then Result := False end
+			if is_internal then
+				if key ~ p_node.key then
+					Result := True
+				end
+
+				if p_node < Current then
+					if attached Current.left as a_current then
+						Result := a_current.has_node (p_node)
+					end
+				end
+
+				if p_node > Current then
+					if attached Current.right as a_current then
+						Result := a_current.has_node (p_node)
+					end
+				end
+			end
 
 		ensure
 			correct_search_result:
 				-- TODO: Complete this postcondition.
 				-- Hint: Result must be same as the internal node we found from subtree rooted at `Current` with the key `p_key`.
-				True
+				attached p_node.key as a_key
+					and then
+					(
+						(Current.tree_search (a_key).key ~ a_key and Result = True)
+						or
+						(Current.tree_search (a_key).is_external and Result = False)
+					)
 		end
 
 feature -- Conversion
@@ -492,21 +714,40 @@ feature -- Conversion
 			-- Notice that the static return type of this query is a deferred class `LIST`,
 			-- to create an object, you must use one of its effective descendant classes.
 
-			create {LINKED_LIST[TREE_NODE[K, V]]} Result.make
+			Result := create {LINKED_LIST[TREE_NODE[K, V]]}.make
+
+			if attached Current.left as a_current then
+				Result.append(a_current.nodes)
+			end
+
+			if is_internal then
+				Result.force (Current)
+			end
+
+			if attached Current.right as a_current then
+				Result.append(a_current.nodes)
+			end
+
+			Result.compare_objects
+
 		ensure
 			number_of_nodes_not_changed:
 				-- This postcondition is completed for you. Do not modify.
 				count = old count
 			inorder_means_result_is_sorted_incrementally:
 				-- TODO: Complete this postcondition.
-				True
+				across
+					1 |..| (nodes.count - 1) is i
+				all
+					nodes[i] < nodes[i+1]
+				end
 
 			no_tree_structure_changed:
 				-- TODO: Complete this postcondition.
 				-- Hint 1: the tree rooted at Current **before** calling `nodes` has
 				-- the same structure (defined by `is_same_tree`) as that **after** calling `nodes`.
 				-- Hint 2: Invoking `is_same_tree(node)` is effectively invoking `Current.is_same_tree(node)`.
-				True
+				is_same_tree (old Current.deep_twin)
 		end
 
 feature -- Helper features for postconditions
@@ -524,6 +765,38 @@ feature -- Helper features for postconditions
 			-- 2. Recursively, `Current`'s left subtree, if existing, is the same tree as other's left subtree, if existing.
 			--		And similarly for the `Current`'s right subtree and `other`'s right subtree.
 
+			if is_external and other.is_external then
+				Result := True
+
+			elseif is_external or other.is_external then
+				Result := False
+
+			elseif Current /~ other then
+				Result := False
+
+			end
+
+			if attached Current.left as a_current then
+				if attached other.left as a_other then
+					Result := a_current.is_same_tree(a_other)
+				end
+			end
+
+			if attached Current.right as a_current then
+				if attached other.right as a_other then
+					Result := a_current.is_same_tree(a_other)
+				end
+			end
+
+			if attached Current.left as a_current_left then
+				if attached other.left as a_other_left then
+					if attached Current.right as a_current_right then
+						if attached other.right as a_other_right then
+							Result := a_current_left.is_same_tree(a_other_left) and a_current_right.is_same_tree(a_other_right)
+						end
+					end
+				end
+			end
 		end
 
 

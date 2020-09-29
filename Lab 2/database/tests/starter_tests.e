@@ -38,7 +38,7 @@ feature
 			add_inner_join_tests
 
 -- 			TODO: Uncomment this once you made `DATABASE` iterable.
---			add_iterator_tests
+			add_iterator_tests
 		end
 
 feature -- syntax demo
@@ -352,16 +352,37 @@ feature -- count
 	add_count_tests
 		do
 			add_boolean_case(agent dbt_count1)
+			add_boolean_case(agent dbt_count2)
+			add_boolean_case(agent dbt_count3)
 		end
 
 	dbt_count1: BOOLEAN
 	 	local
 	 	do
-	 		comment ("dbt_count1: count, insert 10")
+	 		comment ("dbt_count1: count, insert 10 (Integer)")
 			reset_as_linear_db
 			env_int_int (db_int_int)
 
 			Result := db_int_int.count = 10
+	 	end
+
+	 dbt_count2: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_count2: count, insert 10 (String)")
+			reset_as_linear_db
+			env_str_str (db_str_str)
+
+			Result := db_str_str.count = 10
+	 	end
+
+	 dbt_count3: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_count3: count, insert 0")
+			reset_as_linear_db
+
+			Result := db_int_int.count = 0
 	 	end
 
 feature -- search
@@ -370,26 +391,48 @@ feature -- search
 		do
 			add_boolean_case(agent dbt_search1)
 			add_boolean_case(agent dbt_search2)
+			add_boolean_case(agent dbt_search3)
+			add_boolean_case(agent dbt_search4)
 		end
+
+	dbt_search4: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_search4: search `a`")
+			reset_as_linear_db
+			env_str_str (db_str_str)
+
+			Result := db_str_str.search ("a") ~ "a"
+	 	end
+
+	dbt_search3: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_search3: search 1")
+			reset_as_linear_db
+			env_int_int (db_int_int)
+
+			Result := db_int_int.search (1) = 1
+	 	end
 
 	dbt_search2: BOOLEAN
 	 	local
 	 	do
-	 		comment ("dbt_search2: search 10")
+	 		comment ("dbt_search2: search 11 dosent exist")
 			reset_as_linear_db
 			env_int_int (db_int_int)
 
-			Result := db_int_int.search (10) = 10
+			Result := db_int_int.search (11) = 0
 	 	end
 
 	dbt_search1: BOOLEAN
 	 	local
 	 	do
-	 		comment ("dbt_search1: search 1")
+	 		comment ("dbt_search1: search `z` dosent exist")
 			reset_as_linear_db
-			env_int_int (db_int_int)
+			env_str_str (db_str_str)
 
-			Result := db_int_int.search (1) = 1
+			Result := db_str_str.search ("z") = void
 	 	end
 
 feature -- delete
@@ -398,7 +441,35 @@ feature -- delete
 		do
 			add_boolean_case(agent dbt_delete1)
 			add_boolean_case(agent dbt_delete2)
+			add_boolean_case(agent dbt_delete3)
+			add_boolean_case(agent dbt_delete4)
 		end
+
+	dbt_delete4: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_delete4: delete `a`")
+			reset_as_linear_db
+			env_str_str (db_str_str)
+			db_str_str.delete ("a")
+
+			Result := db_str_str.count = 9
+			check Result end
+			Result := not db_str_str.has_key ("a")
+	 	end
+
+	dbt_delete3: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_delete3: delete `d`")
+			reset_as_linear_db
+			env_str_str (db_str_str)
+			db_str_str.delete ("d")
+
+			Result := db_str_str.count = 9
+			check Result end
+			Result := not db_str_str.has_key ("d")
+	 	end
 
 	dbt_delete2: BOOLEAN
 	 	local
@@ -409,6 +480,8 @@ feature -- delete
 			db_str_str.delete ("i")
 
 			Result := db_str_str.count = 9
+			check Result end
+			Result := not db_str_str.has_key ("i")
 	 	end
 
 	dbt_delete1: BOOLEAN
@@ -420,6 +493,8 @@ feature -- delete
 			db_int_int.delete (1)
 
 			Result := db_int_int.count = 9
+			check Result end
+			Result := not db_int_int.has_key (1)
 	 	end
 
 feature -- has_key
@@ -428,24 +503,81 @@ feature -- has_key
 		do
 			add_boolean_case(agent dbt_has_key1)
 			add_boolean_case(agent dbt_has_key2)
+			add_boolean_case(agent dbt_has_key3)
+			add_boolean_case(agent dbt_has_key4)
 		end
+
+	dbt_has_key4: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_has_key4: has_key all values (Integer)")
+			reset_as_linear_db
+			env_int_int (db_int_int)
+			Result := db_int_int.has_key (1)
+			check Result end
+			Result := db_int_int.has_key (2)
+			check Result end
+			Result := db_int_int.has_key (3)
+			check Result end
+			Result := db_int_int.has_key (4)
+			check Result end
+			Result := db_int_int.has_key (5)
+			check Result end
+			Result := db_int_int.has_key (6)
+			check Result end
+			Result := db_int_int.has_key (7)
+			check Result end
+			Result := db_int_int.has_key (8)
+			check Result end
+			Result := db_int_int.has_key (9)
+			check Result end
+			Result := db_int_int.has_key (10)
+	 	end
+
+	dbt_has_key3: BOOLEAN
+	 	local
+	 	do
+	 		comment ("dbt_has_key3: has_key all values (String)")
+			reset_as_linear_db
+			env_str_str (db_str_str)
+			Result := db_str_str.has_key ("a")
+			check Result end
+			Result := db_str_str.has_key ("b")
+			check Result end
+			Result := db_str_str.has_key ("c")
+			check Result end
+			Result := db_str_str.has_key ("d")
+			check Result end
+			Result := db_str_str.has_key ("e")
+			check Result end
+			Result := db_str_str.has_key ("f")
+			check Result end
+			Result := db_str_str.has_key ("g")
+			check Result end
+			Result := db_str_str.has_key ("h")
+			check Result end
+			Result := db_str_str.has_key ("i")
+			check Result end
+			Result := db_str_str.has_key ("j")
+	 	end
+
 
 	dbt_has_key2: BOOLEAN
 	 	local
 	 	do
-	 		comment ("dbt_has_key2: has_key `i`")
+	 		comment ("dbt_has_key2: has_key `z` dosent exist")
 			reset_as_linear_db
 			env_str_str (db_str_str)
-			Result := db_str_str.has_key ("i")
+			Result := not db_str_str.has_key ("z")
 	 	end
 
 	dbt_has_key1: BOOLEAN
 	 	local
 	 	do
-	 		comment ("dbt_has_key1: has_key 1")
+	 		comment ("dbt_has_key1: has_key 11 dosent exist")
 			reset_as_linear_db
 			env_int_int (db_int_int)
-			Result := db_int_int.has_key (1)
+			Result := not db_int_int.has_key (11)
 	 	end
 
 feature -- override
@@ -776,68 +908,68 @@ feature -- inner_join
 		end
 
 -- TODO: Uncomment these tests once you made `DATABASE` iterable.
---feature -- iterator
+feature -- iterator
 
---	add_iterator_tests
---		do
---			add_boolean_case(agent dbt_iterator1)
---			add_boolean_case(agent dbt_iterator5)
+	add_iterator_tests
+		do
+			add_boolean_case(agent dbt_iterator1)
+			add_boolean_case(agent dbt_iterator5)
 
---		end
+		end
 
--- 	dbt_iterator5: BOOLEAN
---		local
---			l_list: LIST[TUPLE[INTEGER, INTEGER]]
---	 	do
---	 		comment ("dbt_iterator5: TREE_DB, int_int, go through 1 ~ 10")
---			reset_as_tree_db
---			env_int_int (db_int_int)
+ 	dbt_iterator5: BOOLEAN
+		local
+			l_list: LIST[TUPLE[INTEGER, INTEGER]]
+	 	do
+	 		comment ("dbt_iterator5: TREE_DB, int_int, go through 1 ~ 10")
+			reset_as_tree_db
+			env_int_int (db_int_int)
 
---			create {ARRAYED_LIST[TUPLE[INTEGER, INTEGER]]} l_list.make (db_int_int.count)
+			create {ARRAYED_LIST[TUPLE[INTEGER, INTEGER]]} l_list.make (db_int_int.count)
 
---			across
---				db_int_int is i_item
---			loop
---				l_list.force (i_item)
---			end
+			across
+				db_int_int is i_item
+			loop
+				l_list.force (i_item)
+			end
 
---			Result :=
---				across
---					l_list.count |..| 1 is i
---				all
---					l_list[i][1] ~ i
---					and
---					l_list[i][2] ~ i
---				end
+			Result :=
+				across
+					l_list.count |..| 1 is i
+				all
+					l_list[i][1] ~ i
+					and
+					l_list[i][2] ~ i
+				end
 
---	 	end
+	 	end
 
--- 	dbt_iterator1: BOOLEAN
---		local
---			l_list: LIST[TUPLE[INTEGER, INTEGER]]
---	 	do
---	 		comment ("dbt_iterator1: LINEAR_DB, int_int, go through 1 ~ 10")
---			reset_as_linear_db
---			env_int_int (db_int_int)
+ 	dbt_iterator1: BOOLEAN
+		local
+			l_list: LIST[TUPLE[INTEGER, INTEGER]]
+	 	do
+	 		comment ("dbt_iterator1: LINEAR_DB, int_int, go through 1 ~ 10")
+			reset_as_linear_db
+			env_int_int (db_int_int)
 
---			create {ARRAYED_LIST[TUPLE[INTEGER, INTEGER]]} l_list.make (db_int_int.count)
+			create {ARRAYED_LIST[TUPLE[INTEGER, INTEGER]]} l_list.make (db_int_int.count)
 
---			across
---				db_int_int is i_item
---			loop
---				l_list.force (i_item)
---			end
+			across
+				db_int_int is i_item
+			loop
+				l_list.force (i_item)
+			end
 
---			Result :=
---				across
---					l_list.count |..| 1 is i
---				all
---					l_list[i][1] ~ i
---					and
---					l_list[i][2] ~ i
---				end
+			Result :=
+				across
+					l_list.count |..| 1 is i
+				all
+					l_list[i][1] ~ i
+					and
+					l_list[i][2] ~ i
+				end
 
---	 	end
+	 	end
 
 end
 

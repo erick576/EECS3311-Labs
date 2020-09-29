@@ -53,6 +53,9 @@ feature -- Abstraction Function
 			-- The public, abstract view of a `DATABASE`.
 			-- This is the so-called `abstraction function` which
 			-- converts/promotes the implementation (i.e., `keys` and `values`) to a mathematical object (i.e., `REL`).
+		local
+			tuple_array : ARRAY[TUPLE[K, V]]
+			tuple : TUPLE[K, V]
 		do
 			-- TODO: Implement this abstraction function
 			-- You are expeced to explore the available queries/commands of the REL class in MATHMODELS.
@@ -62,18 +65,31 @@ feature -- Abstraction Function
 
 			create Result.make_empty -- This first line of implementation is given to you.
 
+			create tuple_array.make_empty
+			across
+				keys as cursor
+			loop
+				create tuple.default_create
+				if attached values.at (cursor.item) as val then
+					tuple := [cursor.item , val]
+					tuple_array.force (tuple, tuple_array.count + 1)
+				end
+			end
+
+			Result.make_from_tuple_array (tuple_array)
+
 		-- Implicitly, postcondition from `{DATABASE}.model` is inherited here.
 		end
 
 -- TODO: Remove comments from the inherit clause below to start implementing the iterator pattern.
---feature -- Iterator Cursor
+feature -- Iterator Cursor
 
---	new_cursor: ITERATION_CURSOR [TUPLE[key: K; value: V]]
---			-- Returns an iteration cursor for the current class.
---		do
---			-- This implementation is given to you. Do not modify.
---			create {LINEAR_IT[K, V]} Result.make(Current)
---		end
+	new_cursor: ITERATION_CURSOR [TUPLE[key: K; value: V]]
+			-- Returns an iteration cursor for the current class.
+		do
+			-- This implementation is given to you. Do not modify.
+			create {LINEAR_IT[K, V]} Result.make(Current)
+		end
 
 feature -- Implementation of Deferred Routines from `DATABASE`
 
@@ -82,6 +98,7 @@ feature -- Implementation of Deferred Routines from `DATABASE`
 		do
 			-- TODO: Implement this query so that
 			-- the inherited postcondition from `{DATABASE}.count` is satisfied.
+			Result := keys.count
 
 		-- Implicitly, postcondition from `{DATABASE}.count` is inherited here.
 		end
@@ -91,7 +108,11 @@ feature -- Implementation of Deferred Routines from `DATABASE`
 		do
 			-- TODO: Implement this query so that
 			-- the inherited postcondition from `{DATABASE}.has_key` is satisfied.
-
+			if not keys.has (p_key) then
+				Result := False
+			else
+				Result := True
+			end
 
 		-- Implicitly, postcondition from `{DATABASE}.has_key` is inherited here.
 		end
@@ -102,7 +123,9 @@ feature -- Implementation of Deferred Routines from `DATABASE`
 			-- Note. There is no precondition for this query.
 		do
 			-- TODO: Implement this feature so that `{DATABASE}.search` specifications are satisfied.
-
+			if keys.has (p_key) then
+				Result := values.at (p_key)
+			end
 
 		-- Implicitly, postcondition from `{DATABASE}.search` is inherited here.
 		end
@@ -113,6 +136,8 @@ feature -- Implementation of Deferred Routines from `DATABASE`
 		do
 			-- TODO: Implement this command so that
 			-- the inherited postcondition from `{DATABASE}.insert` is satisfied.
+			keys.force (p_key, keys.count + 1)
+			values.extend (p_value, p_key)
 
 		-- Implicitly, postcondition from `{DATABASE}.insert` is inherited here.
 		end
@@ -120,9 +145,30 @@ feature -- Implementation of Deferred Routines from `DATABASE`
 	delete(p_key: K)
 			-- Deletes the mapping whose key is `p_key`.
 			-- See the inherited precondition of `{DATABASE}.delete`.
+		local
+			i , j : INTEGER
 		do
 			-- TODO: Implement this command so that
 			-- the inherited postcondition from `{DATABASE}.delete` is satisfied.
+			values.remove (p_key)
+			from
+				i := 1
+			until
+				i > keys.count
+			loop
+				if keys.at (i) ~ p_key then
+					from
+						j := i
+					until
+						j > keys.count - 1
+					loop
+						keys.force (keys.at (j + 1), j)
+						j := j + 1
+					end
+					keys.remove_tail (1)
+				end
+				i := i + 1
+			end
 
 		-- Implicitly, postcondition from `{DATABASE}.delete` is inherited here.
 		end

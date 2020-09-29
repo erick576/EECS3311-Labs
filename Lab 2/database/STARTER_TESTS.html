@@ -3,18 +3,18 @@
 <base target="main">
 </head>
 <body>
-<p align="center"><b>Test Run:09/27/2020   7:18:50.806 PM</b></p><font color="blue"><H2  align="center">STARTER_TESTS</H2></font><p align="center">Note: * indicates a violation test case</p>
+<p align="center"><b>Test Run:09/29/2020   4:32:43.116 PM</b></p><font color="blue"><H2  align="center">STARTER_TESTS</H2></font><p align="center">Note: * indicates a violation test case</p>
 <table border=1 align="center">
-<tr><td bgcolor="#FF0000" colspan="3">&nbsp;</td></tr><tr><td align="center" colspan="3">FAILED (24 failed & 8 passed out of 32)</td></tr>
+<tr><td bgcolor="#00FF00" colspan="3">&nbsp;</td></tr><tr><td align="center" colspan="3">PASSED (42 out of 42)</td></tr>
 <tr><td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Case Type</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Passed</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Total</b></font></td></tr>
 <tr><td align="center"><font color="blue"><b>Violation</b></font></td>
 <td align="center">0</td><td align="center">0</td></tr>
 <tr><td align="center"><font color="blue"><b>Boolean</b></font></td>
-<td align="center">8</td><td align="center">32</td></tr>
+<td align="center">42</td><td align="center">42</td></tr>
 <tr><td align="center"><font color="blue"><b>All Cases</b></font></td>
-<td align="center">8</td><td align="center">32</td></tr>
+<td align="center">42</td><td align="center">42</td></tr>
 <tr><td align="center" bgcolor="#000080"><font color="#FFCC00"><b>State</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Contract Violation</b></font></td>
 <td align="center" bgcolor="#000080"><font color="#FFCC00"><b>Test Name</b></font></td></tr>
@@ -43,75 +43,107 @@
 <td align="center">NONE</td>
 <td>dbt_model7: int LINEAR_DB, check if its model maps all the keys and values</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_insert1: insert 1</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_insert2: insert 1 ~ 3</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_insert3: insert 3 ~ 1</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_insert4: insert 1, 10, 2, 9, 3, 8, 4, 7, 5, 6</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>dbt_count1: count, insert 10</td>
+<td>dbt_count1: count, insert 10 (Integer)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>dbt_search1: search 1</td>
+<td>dbt_count2: count, insert 10 (String)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>dbt_search2: search 10</td>
+<td>dbt_count3: count, insert 0</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_search1: search `z` dosent exist</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_search2: search 11 dosent exist</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_search3: search 1</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_search4: search `a`</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_delete1: delete 1</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_delete2: delete `i`</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>dbt_has_key1: has_key 1</td>
+<td>dbt_delete3: delete `d`</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
-<td>dbt_has_key2: has_key `i`</td>
+<td>dbt_delete4: delete `a`</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_has_key1: has_key 11 dosent exist</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_has_key2: has_key `z` dosent exist</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_has_key3: has_key all values (String)</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_has_key4: has_key all values (Integer)</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_override1: override (1, 372)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_override2: override (11, 999)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_override3: override (`A`, `AAA`)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_override4: override (`Z`, `ZZZ`)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_common_key_db1: common key db_int_int clone</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_common_key_db2: common key db_int_int, db_int_int smaller</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_common_key_db3: common key db_int_int, other db smaller</td>
 </tr>
@@ -119,33 +151,41 @@
 <td align="center">NONE</td>
 <td>dbt_common_key_db4: common key db_int_int, db_int_int none</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_interval_image1: env_int_int, [3, 7)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_interval_image2: env_int_int, [-5, 3)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_interval_image3: env_int_int, [8, 50)</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_inner_join1: int_int, and int_str</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_inner_join2: int_int, and int_str, int_str only odd keys</td>
 </tr>
-<tr><td><font color="red"><b>FAILED</b></font></td>
+<tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_inner_join3: int_int, and int_str, int_int only odd keys</td>
 </tr>
 <tr><td><font color="green"><b>PASSED</b></font></td>
 <td align="center">NONE</td>
 <td>dbt_inner_join4: int_int, and int_str, no int_str entries</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_iterator1: LINEAR_DB, int_int, go through 1 ~ 10</td>
+</tr>
+<tr><td><font color="green"><b>PASSED</b></font></td>
+<td align="center">NONE</td>
+<td>dbt_iterator5: TREE_DB, int_int, go through 1 ~ 10</td>
 </tr>
 </table></body>
 </html>
