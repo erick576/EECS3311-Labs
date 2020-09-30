@@ -188,6 +188,7 @@ feature -- Basic
 					Result.insert (key, value)
 				end
 			end
+
 		ensure
 			nothing_changed:
 				-- TODO: Complete this postcondition.
@@ -230,6 +231,7 @@ feature -- Intermediate
 			loop
 				Result.force (value)
 			end
+
 		ensure
 			nothing_changed:
 				-- TODO: Complete this postcondition.

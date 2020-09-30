@@ -25,7 +25,7 @@ inherit
 create
 	make
 
-feature {ES_TEST} -- Restricted Attribute
+feature {ITERATION_CURSOR, ES_TEST} -- Restricted Attribute
 	-- This attribute is only accessible by any class that is a descendant of `ITERATION_CURSOR` or of `ES_TEST`.
 	-- e.g., Your own iteration cursor class might access this `bst` attribute.
 	-- Do not modify this attribute: it is used to implement the deferred routines inherited from `DATABASE`.

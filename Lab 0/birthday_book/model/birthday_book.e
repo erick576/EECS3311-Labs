@@ -93,12 +93,13 @@ feature -- Queries
 			until
 				i > names.count
 			loop
-				if today.day = birthdays[i].day and today.month = birthdays[i].month
+				if today.day ~ birthdays[i].day and today.month ~ birthdays[i].month
 					then
 						Result.force (names[i], Result.count + 1)
 				end
 				i := i + 1
 			end
+			Result.compare_objects
 
 		ensure
 			lower_of_result: -- Do not modify
