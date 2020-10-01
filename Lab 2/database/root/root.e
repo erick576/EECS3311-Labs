@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Run app
 		do
 			add_test (create {STARTER_TESTS}.make)
+			add_test (create {PERSONAL_TESTS}.make)
 
 			show_browser
 			run_espec

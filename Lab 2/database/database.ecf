@@ -44,6 +44,16 @@
 			<file_rule>
 				<exclude>^lab2$</exclude>
 			</file_rule>
+			<file_rule>
+				<exclude>^postcondition$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^postcondition$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^postcondition$</exclude>
+			</file_rule>
+			<cluster name="postcondition" location="C:\Users\Ericn\Documents\GitHub\EECS3311-Labs\Lab 2\database\tests\postcondition\"/>
 		</cluster>
 		<cluster name="trees" location=".\trees\" recursive="true"/>
 	</target>

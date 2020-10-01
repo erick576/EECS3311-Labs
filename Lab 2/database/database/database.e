@@ -53,7 +53,7 @@ feature -- Abstraction Function
 				-- TODO: Complete this postcondition.
 				-- Hints: 1. `Result` relation is already iterable.
 				--           2. Each key-value pair in the `Result` relation exists as a corresponding entry in `Current` database.
-				across Result as result_cursor all (across Current as cursor some cursor.item ~ result_cursor.item end) end
+				(across Result as result_cursor all (across Current as cursor some cursor.item ~ result_cursor.item end) end) and Result.count = Current.count
 		end
 
 -- Remove comments from the inherit clause below to start implementing the iterator pattern.
@@ -231,6 +231,8 @@ feature -- Intermediate
 			loop
 				Result.force (value)
 			end
+
+			Result.compare_objects
 
 		ensure
 			nothing_changed:
