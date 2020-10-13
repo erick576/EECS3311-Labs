@@ -20,12 +20,13 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create s.make_empty
-			i := 0
+--			create s.make_empty
+			create grid.make
 		end
 
 feature -- model attributes
-	s : STRING
+--	s : STRING
+	grid : GRID
 	i : INTEGER
 
 feature -- model operations
@@ -44,8 +45,8 @@ feature -- model operations
 feature -- queries
 	out : STRING
 		do
-			create Result.make_from_string ("  ")
-			Result.append ("Welcome to Space Defender Version 1.")
+			create Result.make_empty
+			Result.append (grid.display_output (i))
 		end
 
 end
