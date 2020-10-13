@@ -241,7 +241,7 @@ feature {ETF_COMMAND} -- commands to implement
 				error_count := error_count + 1
 				error_message := "Please end the current game before starting a new one."
 
-			elseif player_mov <= (row - 1 + column - 1) then
+			elseif player_mov > (row - 1 + column - 1) then
 				is_error := true
 				error_count := error_count + 1
 				error_message := "Starfighter movement should not exceed row - 1 + column - 1 size of the board."
