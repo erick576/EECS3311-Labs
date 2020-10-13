@@ -122,7 +122,7 @@ feature -- Output Displays
 	display_state : STRING
 		do
 			create Result.make_empty
-			Result.append("state:" + valid_command_count.out + "." + error_count.out + ", ")
+			Result.append("  state:" + valid_command_count.out + "." + error_count.out + ", ")
 
 			if is_error = true then
 				Result.append("error")
@@ -139,7 +139,7 @@ feature -- Output Displays
 
 	display_grid : STRING
 		local
-			i, j : INTEGER
+			i, j, count : INTEGER
 		do
 			create Result.make_empty
 			Result.append("  ")
@@ -159,6 +159,8 @@ feature -- Output Displays
 
 			Result.append ("%N")
 
+			count := 1
+
 			from
 				i := 1
 			until
@@ -172,11 +174,12 @@ feature -- Output Displays
 					j > col_size
 				loop
 					if j = col_size then
-						Result.append (grid_elements.at (i * j).out)
+						Result.append (grid_elements.at (count).out)
 					else
-						Result.append (grid_elements.at (i * j).out + " ")
+						Result.append (grid_elements.at (count).out + "  ")
 					end
 					j := j  + 1
+					count := count + 1
 				end
 
 				Result.append ("%N")
