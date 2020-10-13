@@ -40,7 +40,7 @@
 		<cluster name="generated_code" location=".\generated_code\" recursive="true"/>
 		<cluster name="root" location=".\root\" recursive="true"/>
 		<cluster name="space_defender_1" location=".\space_defender_1\" recursive="true">
-			<cluster name="operation" location="C:\Users\Ericn\Documents\GitHub\EECS3311-Labs\Lab 3\space_defender_1\space_defender_1\model\operation\"/>
+			<cluster name="operation" location=".\space_defender_1\model\operation\"/>
 		</cluster>
 	</target>
 </system>
