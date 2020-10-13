@@ -6,16 +6,17 @@ note
 
 class
 	ETF_PLAY
-inherit 
+inherit
 	ETF_PLAY_INTERFACE
 create
 	make
-feature -- command 
+feature -- command
 	play(row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
-		require else 
+		require else
 			play_precond(row, column, player_mov, project_mov)
     	do
 			-- perform some update on the model state
+			model.grid.play (row, column, player_mov, project_mov)
 			model.default_update
 			etf_cmd_container.on_change.notify ([Current])
     	end
