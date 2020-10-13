@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			-- Set up the row values and grid values in character form
 			grid_char_rows := <<'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'>>
 			create grid_elements.make_filled ('_', 0, row_size * col_size)
-			grid_elements.force ('S', (starfighter.x * col_size) + starfighter.y)
+			grid_elements.force ('S', ((starfighter.x - 1) * col_size) + starfighter.y)
 
 			-- Set up boolean expression for game playing
 			currently_playing := true
@@ -142,7 +142,7 @@ feature -- Output Displays
 			i, j, count : INTEGER
 		do
 			create Result.make_empty
-			Result.append("    ")
+			Result.append("      ")
 			from
 				i := 1
 			until
@@ -166,7 +166,7 @@ feature -- Output Displays
 			until
 				i > row_size
 			loop
-				Result.append ("  " + grid_char_rows.at (i).out + " ")
+				Result.append ("    " + grid_char_rows.at (i).out + " ")
 
 				from
 					j := 1
