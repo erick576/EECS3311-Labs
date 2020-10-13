@@ -153,6 +153,8 @@ feature -- Output Displays
 				else
 					Result.append (i.out + " ")
 				end
+
+				i := i + 1
 			end
 
 			Result.append ("%N")
@@ -174,9 +176,11 @@ feature -- Output Displays
 					else
 						Result.append (grid_elements.at (i * j).out + " ")
 					end
+					j := j  + 1
 				end
 
 				Result.append ("%N")
+				i := i + 1
 			end
 		end
 
