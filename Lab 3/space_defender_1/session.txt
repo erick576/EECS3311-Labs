@@ -1,16 +1,4 @@
-play(10, 10 , 10, 5)
+play(5, 15, 15, 3)
 fire
-pass
-pass
-pass
-pass
-move(J, 1)
-fire
-pass
-pass
-pass
-move(A, 1)
-fire
-pass
-pass
-pass
+move(B, 5)
+move(C, 10)

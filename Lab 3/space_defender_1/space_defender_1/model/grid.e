@@ -245,6 +245,7 @@ feature -- Output Displays
 
 				if still_alive = false then
 					Result.append("%N  " + game_over_message)
+					still_alive := true
 				end
 
 				-- Display aftermath of turn
@@ -367,6 +368,8 @@ feature {ETF_COMMAND} -- commands to implement
 											still_alive := false
 											currently_playing := false
 
+											i := column
+
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
 										end
@@ -396,6 +399,8 @@ feature {ETF_COMMAND} -- commands to implement
 											new_collided_y := starfighter.y
 											still_alive := false
 											currently_playing := false
+
+											i := column
 
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
@@ -430,6 +435,8 @@ feature {ETF_COMMAND} -- commands to implement
 											still_alive := false
 											currently_playing := false
 
+											i := row
+
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
 										end
@@ -459,6 +466,8 @@ feature {ETF_COMMAND} -- commands to implement
 											new_collided_y := starfighter.y
 											still_alive := false
 											currently_playing := false
+
+											i := row
 
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
@@ -494,6 +503,8 @@ feature {ETF_COMMAND} -- commands to implement
 											still_alive := false
 											currently_playing := false
 
+											i := row
+
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
 										end
@@ -519,6 +530,8 @@ feature {ETF_COMMAND} -- commands to implement
 											new_collided_y := starfighter.y
 											still_alive := false
 											currently_playing := false
+
+											i := column
 
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
@@ -550,6 +563,8 @@ feature {ETF_COMMAND} -- commands to implement
 											still_alive := false
 											currently_playing := false
 
+											i := row
+
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
 										end
@@ -575,6 +590,8 @@ feature {ETF_COMMAND} -- commands to implement
 											new_collided_y := starfighter.y
 											still_alive := false
 											currently_playing := false
+
+											i := column
 
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
@@ -606,6 +623,8 @@ feature {ETF_COMMAND} -- commands to implement
 											still_alive := false
 											currently_playing := false
 
+											i := row
+
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
 										end
@@ -631,6 +650,8 @@ feature {ETF_COMMAND} -- commands to implement
 											new_collided_y := starfighter.y
 											still_alive := false
 											currently_playing := false
+
+											i := column
 
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
@@ -663,6 +684,8 @@ feature {ETF_COMMAND} -- commands to implement
 											still_alive := false
 											currently_playing := false
 
+											i := row
+
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
 										end
@@ -688,6 +711,8 @@ feature {ETF_COMMAND} -- commands to implement
 											new_collided_y := starfighter.y
 											still_alive := false
 											currently_playing := false
+
+											i := column
 
 										else
 											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
@@ -790,6 +815,9 @@ feature {ETF_COMMAND} -- commands to implement
 								new_collided_y := projectiles.at (i).y
 								still_alive := false
 								currently_playing := false
+
+								j := project_move + 1
+
 							else
 								grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) := '*'
 							end
