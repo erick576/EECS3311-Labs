@@ -16,7 +16,7 @@ feature -- command
 			move_precond(row, column)
     	do
 			-- perform some update on the model state
-			model.grid.move (row, column)
+			model.grid.move (model.grid.decode(row), column)
 			model.default_update
 			etf_cmd_container.on_change.notify ([Current])
     	end
