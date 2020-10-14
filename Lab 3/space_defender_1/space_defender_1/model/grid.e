@@ -699,9 +699,9 @@ feature {ETF_COMMAND} -- commands to implement
 					end
 
 					if still_alive = true then
-						operation_message := "  " + "The Starfighter moves: [" + grid_char_rows.at (old_collided_x).out + "," + old_collided_y.out + "] -> [" + grid_char_rows.at (row).out + "," + column.out + "]"
+						operation_message.append ("  " + "The Starfighter moves: [" + grid_char_rows.at (old_collided_x).out + "," + old_collided_y.out + "] -> [" + grid_char_rows.at (row).out + "," + column.out + "]")
 					else
-						operation_message := "  " + "The Starfighter moves and collides with a projectile: [" + grid_char_rows.at (old_collided_x).out + "," + old_collided_y.out + "] -> [" + grid_char_rows.at (new_collided_x).out + "," + new_collided_y.out + "]"
+						operation_message.append ("  " + "The Starfighter moves and collides with a projectile: [" + grid_char_rows.at (old_collided_x).out + "," + old_collided_y.out + "] -> [" + grid_char_rows.at (new_collided_x).out + "," + new_collided_y.out + "]")
 					end
 				end
 			end
@@ -726,7 +726,7 @@ feature {ETF_COMMAND} -- commands to implement
 					if projectiles.at (projectiles.count).y <= col_size then
 						grid_elements.at (((projectiles.at (projectiles.count).x - 1) * col_size) + projectiles.at (projectiles.count).y) := '*'
 					end
-					operation_message.append ("  " + "The Starfighter fires a projectile at: [" + grid_char_rows.at (projectiles.at (projectiles.count).x).out + "," + projectiles.at (projectiles.count).y.out + "]")
+					operation_message.append ("  " + "The Starfighter fires a projectile at: [" + starfighter.x.out + "," + starfighter.y.out + "]")
 				end
 			end
 		end
