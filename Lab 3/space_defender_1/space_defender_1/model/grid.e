@@ -131,7 +131,7 @@ feature -- Output Displays
 			i, j, count : INTEGER
 		do
 			create Result.make_empty
-			Result.append("      ")
+			Result.append("    ")
 			from
 				i := 1
 			until
