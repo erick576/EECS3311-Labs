@@ -229,6 +229,7 @@ feature {ETF_COMMAND} -- commands to implement
 			else
 				reset (row, column, player_mov, project_mov)
 				valid_command_count := valid_command_count + 1
+				error_count := 0
 			end
 		end
 
