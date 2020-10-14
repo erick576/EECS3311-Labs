@@ -775,7 +775,9 @@ feature {ETF_COMMAND} -- commands to implement
 					until
 						j > project_move
 					loop
-						grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) := '_'
+						if projectiles.at (i).y <= col_size then
+							grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) := '_'
+						end
 
 						projectiles.at (i).set_y (projectiles.at (i).y + 1)
 
