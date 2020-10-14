@@ -204,7 +204,6 @@ feature -- Output Displays
 				-- Display Operations or errors
 				if is_error = true then
 					Result.append("  " + error_message)
-					Result.append("%N")
 				end
 
 				-- Display The grid is playing
