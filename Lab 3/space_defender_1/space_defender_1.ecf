@@ -46,6 +46,12 @@
 			<file_rule>
 				<exclude>^model/operation$</exclude>
 			</file_rule>
+			<file_rule>
+				<exclude>^model/operation$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^model/operation$</exclude>
+			</file_rule>
 		</cluster>
 	</target>
 </system>
