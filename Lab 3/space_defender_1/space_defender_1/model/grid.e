@@ -241,6 +241,7 @@ feature {ETF_COMMAND} -- commands to implement
 			else
 				currently_playing := false
 				is_error := false
+				error_count := 0
 				valid_command_count := valid_command_count + 1
 				operation_message := "Game has been exited."
 			end
