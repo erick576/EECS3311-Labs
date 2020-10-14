@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 	reset (row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
 		local
-			start_pos : INTEGER
+			start_pos : DOUBLE
 		do
 			-- Set the row and column size
 			row_size := row
@@ -51,17 +51,10 @@ feature {NONE} -- Initialization
 			project_move := project_move
 
 			-- Set up the ceiling of the row / 2 for the default position in the grid
-			start_pos := row_size
-			from
-
-			until
-				(start_pos * 2 = row_size) or (((start_pos - 1) * 2) + 1 = row_size)
-			loop
-				start_pos := start_pos - 2
-			end
+			start_pos := row_size / 2
 
 			-- Use the set up value to set the position of the starfighter and default porjectiles (0)
-			create starfighter.make (start_pos, 1)
+			create starfighter.make (start_pos.ceiling, 1)
 			create projectiles.make (0)
 
 			-- Set up the valid counts for operations and errors
@@ -182,7 +175,10 @@ feature -- Output Displays
 					count := count + 1
 				end
 
-				Result.append ("%N")
+				if i < row_size then
+					Result.append ("%N")
+				end
+
 				i := i + 1
 			end
 		end
