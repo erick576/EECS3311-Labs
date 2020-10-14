@@ -57,10 +57,6 @@ feature {NONE} -- Initialization
 			create starfighter.make (start_pos.ceiling, 1)
 			create projectiles.make (0)
 
-			-- Set up the valid counts for operations and errors
-			valid_command_count := 1
-			error_count := 0
-
 			-- Set up the row values and grid values in character form
 			grid_char_rows := <<'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'>>
 			create grid_elements.make_filled ('_', 0, row_size * col_size)
@@ -204,6 +200,8 @@ feature -- Output Displays
 				-- Display Operations or errors
 				if is_error = true then
 					Result.append("  " + error_message)
+				else
+					Result.append("  " + operation_message)
 				end
 
 				-- Display The grid is playing
@@ -217,12 +215,39 @@ feature -- Output Displays
 
 feature {ETF_COMMAND} -- commands to implement
 
---	turn_first_part
---		do
+	play (row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
+		do
+			if currently_playing = true then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Please end the current game before starting a new one."
 
---		end
+			elseif player_mov > (row - 1 + column - 1) then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Starfighter movement should not exceed row - 1 + column - 1 size of the board."
+			else
+				reset (row, column, player_mov, project_mov)
+				valid_command_count := valid_command_count + 1
+			end
+		end
 
---	abort
+	abort
+		do
+			if currently_playing = false then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Not in game."
+			else
+				currently_playing := false
+				is_error := false
+				valid_command_count := valid_command_count + 1
+				operation_message := "Game has been exited."
+			end
+		end
+
+
+		--	turn_first_part
 --		do
 
 --		end
@@ -242,19 +267,4 @@ feature {ETF_COMMAND} -- commands to implement
 
 --		end
 
-	play (row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
-		do
-			if currently_playing = true then
-				is_error := true
-				error_count := error_count + 1
-				error_message := "Please end the current game before starting a new one."
-
-			elseif player_mov > (row - 1 + column - 1) then
-				is_error := true
-				error_count := error_count + 1
-				error_message := "Starfighter movement should not exceed row - 1 + column - 1 size of the board."
-			else
-				reset (row, column, player_mov, project_mov)
-			end
-		end
 end
