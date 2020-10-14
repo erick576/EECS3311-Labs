@@ -144,7 +144,13 @@ feature -- Output Displays
 				if i = col_size then
 					Result.append (i.out)
 				else
-					Result.append (i.out + "  ")
+					Result.append (i.out)
+				end
+
+				if i >= 9 then
+					Result.append (" ")
+				else
+					Result.append ("  ")
 				end
 
 				i := i + 1
