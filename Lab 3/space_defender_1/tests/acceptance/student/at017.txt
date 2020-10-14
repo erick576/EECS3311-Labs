@@ -1,0 +1,9 @@
+fire
+fire
+abort
+abort
+move(A,3)
+pass
+pass
+play(5,10, 5, 1)
+abort

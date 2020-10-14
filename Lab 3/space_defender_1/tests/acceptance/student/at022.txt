@@ -1,0 +1,32 @@
+play(5, 10, 5 ,1)
+abort
+play(5, 10, 5, 1)
+move(A, 2)
+fire
+fire
+move(C,1)
+fire
+move(D, 4)
+move(C, 4)
+pass
+pass
+pass
+play(5, 10, 5, 1)
+fire 
+move(D, 1)
+move(C, 2)
+move(J, 4)
+move(J, 4)
+move(J, 4)
+move(J, 4)
+move(J, 4)
+fire
+abort
+move(J, 4)
+move(J, 4)
+abort
+play(5, 10, 5, 1)
+abort
+play(5, 10, 25, 3)
+fire
+move(C, 6)

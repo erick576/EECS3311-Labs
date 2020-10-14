@@ -1,0 +1,2 @@
+Type Error: specification of command executions is not type-correct
+play(10, 5, 500, 5) does not conform to declaration play(row: MAX_ROW = 3 .. 10 ; column: MAX_COLUMN = 5 .. 30 ; player_mov: PLAYER_MOV = 1 .. 40 ; project_mov: PROJECT_MOV = 1 .. 5)

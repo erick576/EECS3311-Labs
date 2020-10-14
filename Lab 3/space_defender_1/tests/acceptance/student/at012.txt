@@ -1,0 +1,17 @@
+play(10, 5, 5, 5)
+play(10, 5, 5, 5)
+play(10, 5, 5, 5)
+play(10, 5, 5, 5)
+abort
+abort
+play(10, 5, 5, 5)
+abort
+abort
+abort
+play(10, 5, 5, 5)
+play(10, 5, 5, 5)
+play(10, 5, 5, 5)
+play(10, 5, 5, 5)
+abort
+abort
+play(10, 5, 5, 5)

@@ -1,0 +1,4 @@
+play(5, 20, 5, 1)
+fire
+move(C, 4)
+undo

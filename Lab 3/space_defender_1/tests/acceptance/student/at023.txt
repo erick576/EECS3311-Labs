@@ -1,0 +1,16 @@
+play(10, 30, 30, 5)
+move(A, 15)
+fire
+fire
+pass
+move(J, 10)
+fire
+move(C, 14)
+fire
+move(D, 30)
+pass
+pass
+pass
+pass
+pass
+pass

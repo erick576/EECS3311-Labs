@@ -1,0 +1,7 @@
+  Welcome to Space Defender Version 1.
+->play(10,5,20,5)
+  state:0.1, error
+  Starfighter movement should not exceed row - 1 + column - 1 size of the board.
+->play(10,5,20,5)
+  state:0.2, error
+  Starfighter movement should not exceed row - 1 + column - 1 size of the board.

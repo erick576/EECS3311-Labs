@@ -1,0 +1,11 @@
+undo
+redo
+fire
+fire
+pass
+undo
+undo
+redo
+play(5, 10, 5, 1)
+undo
+redo

@@ -1,0 +1,17 @@
+undo
+redo
+fire
+fire
+pass
+undo
+undo
+redo
+play(5,10,5,1)
+undo
+redo
+undo
+move(A,3)
+move(J,5)
+move(J,5)
+undo
+redo
