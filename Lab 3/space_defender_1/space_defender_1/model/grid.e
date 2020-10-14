@@ -234,7 +234,7 @@ feature -- Output Displays
 					Result.append(operation_message)
 				end
 
-				if currently_playing = true and operation_message.is_empty = false then
+				if (currently_playing = true or still_alive = false) and operation_message.is_empty = false then
 					Result.append("%N")
 				end
 
@@ -726,7 +726,7 @@ feature {ETF_COMMAND} -- commands to implement
 					if projectiles.at (projectiles.count).y <= col_size then
 						grid_elements.at (((projectiles.at (projectiles.count).x - 1) * col_size) + projectiles.at (projectiles.count).y) := '*'
 					end
-					operation_message.append ("  " + "The Starfighter fires a projectile at: [" + starfighter.x.out + "," + starfighter.y.out + "]")
+					operation_message.append ("  " + "The Starfighter fires a projectile at: [" + grid_char_rows.at (starfighter.x).out + "," + starfighter.y.out + "]")
 				end
 			end
 		end
@@ -796,7 +796,12 @@ feature {ETF_COMMAND} -- commands to implement
 						end
 						j := j + 1
 					end
-					operation_message.append ("  " + "A projectile moves: [" + grid_char_rows.at (projectiles.at (i).x).out + "," + old_y.out + "] -> [" + grid_char_rows.at (projectiles.at (i).x).out + "," + projectiles.at (i).y.out + "]%N")
+
+					if projectiles.at (i).y <= col_size then
+						operation_message.append ("  " + "A projectile moves: [" + grid_char_rows.at (projectiles.at (i).x).out + "," + old_y.out + "] -> [" + grid_char_rows.at (projectiles.at (i).x).out + "," + projectiles.at (i).y.out + "]%N")
+					elseif (projectiles.at (i).y - project_move) <= col_size then
+						operation_message.append ("  " + "A projectile moves: [" + grid_char_rows.at (projectiles.at (i).x).out + "," + old_y.out + "] -> out of the board%N")
+					end
 					i := i + 1
 			end
 
