@@ -231,12 +231,12 @@ feature -- Output Displays
 				if is_error = true then
 					Result.append("  " + error_message)
 				elseif operation_message.is_empty = false then
-					Result.append(operation_message + "%N")
+					Result.append(operation_message)
 				end
 
 				-- Display The grid is playing
 				if (currently_playing = true or still_alive = false) and is_error = false then
-					Result.append(display_grid)
+					Result.append("%N" + display_grid)
 				end
 
 				if still_alive = false then
