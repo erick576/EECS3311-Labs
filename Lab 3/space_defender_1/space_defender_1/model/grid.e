@@ -234,9 +234,13 @@ feature -- Output Displays
 					Result.append(operation_message)
 				end
 
+				if currently_playing = true and operation_message.is_empty = false then
+					Result.append("%N")
+				end
+
 				-- Display The grid is playing
 				if (currently_playing = true or still_alive = false) and is_error = false then
-					Result.append("%N" + display_grid)
+					Result.append(display_grid)
 				end
 
 				if still_alive = false then
