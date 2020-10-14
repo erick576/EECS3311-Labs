@@ -18,6 +18,17 @@ feature {NONE} -- Initialization
 			y := y_value
 		end
 
+feature -- Setters
+	set_x (new_x_value : INTEGER_32)
+		do
+			x := new_x_value
+		end
+
+	set_y (new_y_value : INTEGER_32)
+		do
+			y := new_y_value
+		end
+
 feature -- Attributes
 
 	x : INTEGER_32

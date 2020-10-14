@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {GRID}."
 	author: ""
 	date: "$Date$"
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			is_error := false
 
 			operation_message := "Welcome to Space Defender Version 1."
+			game_over_message := "The game is over. Better luck next time!"
 			create error_message.make_empty
 		end
 
@@ -95,6 +96,7 @@ feature {NONE} -- Attributes
 
 	operation_message : STRING
 	error_message : STRING
+	game_over_message : STRING
 
 
 feature {NONE} -- queries
@@ -102,11 +104,6 @@ feature {NONE} -- queries
 feature {NONE} -- Helpers
 
 feature -- Output Displays
-
---	display_error : STRING
---		do
-
---		end
 
 	display_state : STRING
 		do
@@ -120,11 +117,6 @@ feature -- Output Displays
 			end
 			Result.append ("%N")
 		end
-
---	display_operation_messages : STRING
---		do
-
---		end
 
 	display_grid : STRING
 		local
@@ -209,6 +201,10 @@ feature -- Output Displays
 					Result.append(display_grid)
 				end
 
+				if still_alive = false then
+					Result.append("  " + game_over_message)
+				end
+
 				-- Display aftermath of turn
 			end
 		end
@@ -219,11 +215,13 @@ feature {ETF_COMMAND} -- commands to implement
 		do
 			if currently_playing = true then
 				is_error := true
+				still_alive := true
 				error_count := error_count + 1
 				error_message := "Please end the current game before starting a new one."
 
 			elseif player_mov > (row - 1 + column - 1) then
 				is_error := true
+				still_alive := true
 				error_count := error_count + 1
 				error_message := "Starfighter movement should not exceed row - 1 + column - 1 size of the board."
 			else
@@ -237,36 +235,528 @@ feature {ETF_COMMAND} -- commands to implement
 		do
 			if currently_playing = false then
 				is_error := true
+				still_alive := true
 				error_count := error_count + 1
 				error_message := "Not in game."
 			else
 				currently_playing := false
 				is_error := false
+				still_alive := true
 				error_count := 0
 				valid_command_count := valid_command_count + 1
 				operation_message := "Game has been exited."
 			end
 		end
 
+	move (row: INTEGER_32 ; column: INTEGER_32)
+		local
+			i : INTEGER
+			moves, column_diff, row_diff : INTEGER
+			old_collided_x, old_collided_y, new_collided_x, new_collided_y : INTEGER
+		do
+			moves := player_move
 
-		--	turn_first_part
---		do
+			if (starfighter.y - column) >= 0 then
+				column_diff := starfighter.y - column
+			else
+				column_diff := column - starfighter.y
+			end
 
---		end
+			if (starfighter.x - row) >= 0 then
+				row_diff := starfighter.x - row
+			else
+				row_diff := row - starfighter.x
+			end
 
---	fire
---		do
+			if currently_playing = false then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Not in game."
 
---		end
+			elseif row > row_size or row < 1 or column > col_size or column < 1 then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "The location to move to is outside of the board."
 
---	move
---		do
+			elseif (moves - (row_diff + column_diff)) < 0 then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "The location to move to is out of the Starfighter's movement range."
 
---		end
+			elseif row = starfighter.x and column = starfighter.y then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "The Starfighter is already at that location."
 
---	pass
---		do
+			else
+				-- Part 1
+				turn_first_part
 
---		end
+				is_error := false
+				valid_command_count := valid_command_count + 1
+
+				-- Part 2
+				if still_alive = true then
+
+					old_collided_x := starfighter.x
+					old_collided_y := starfighter.y
+
+					if row = starfighter.x and column /= starfighter.y then
+
+						-- Move Right
+						if column > starfighter.y then
+
+							from
+								i := starfighter.y
+							until
+								i > column
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_y (starfighter.y + 1)
+
+									if starfighter.y <= col_size then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i + 1
+							end
+
+						-- Move Left
+						-- column < starfighter.y
+						else
+
+							from
+								i := starfighter.y
+							until
+								i < column
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_y (starfighter.y - 1)
+
+									if starfighter.y > 1 then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i - 1
+							end
+
+						end
+
+					elseif row /= starfighter.x and column = starfighter.y then
+
+						-- Move Up
+						if row > starfighter.x then
+
+							from
+								i := starfighter.x
+							until
+								i > row
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_x (starfighter.x + 1)
+
+									if starfighter.x <= row_size then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i + 1
+							end
+
+						-- Move Down
+						-- row < starfighter.x
+						else
+
+							from
+									i := starfighter.x
+								until
+									i < row
+								loop
+									grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+										starfighter.set_x (starfighter.x - 1)
+
+										if starfighter.x > 1 then
+
+											if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+												-- Game Over
+												grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+												new_collided_x := starfighter.x
+												new_collided_y := starfighter.y
+												still_alive := false
+												currently_playing := false
+
+											else
+												grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+											end
+										end
+									i := i - 1
+								end
+
+						end
+
+					else
+
+						if row > starfighter.x and column > starfighter.y then
+
+							-- Move Up then Right
+
+							from
+								i := starfighter.x
+							until
+								i > row
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_x (starfighter.x + 1)
+
+									if starfighter.x <= row_size then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i + 1
+							end
+
+							from
+								i := starfighter.y
+							until
+								i > column
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_y (starfighter.y + 1)
+
+									if starfighter.y <= col_size then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i + 1
+							end
+
+						elseif row < starfighter.x and column > starfighter.y then
+
+							-- Move Down then Right
+
+							from
+								i := starfighter.x
+							until
+								i < row
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_x (starfighter.x - 1)
+
+									if starfighter.x > 1 then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i - 1
+							end
+
+							from
+								i := starfighter.y
+							until
+								i > column
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_y (starfighter.y + 1)
+
+									if starfighter.y <= col_size then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i + 1
+							end
+
+						elseif row > starfighter.x and column < starfighter.y then
+
+							-- Move Up then Left
+
+							from
+								i := starfighter.x
+							until
+								i > row
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_x (starfighter.x + 1)
+
+									if starfighter.x <= row_size then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i + 1
+							end
+
+							from
+								i := starfighter.y
+							until
+								i < column
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_y (starfighter.y - 1)
+
+									if starfighter.y > 1 then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i - 1
+							end
+
+						-- row < starfighter.x and column < starfighter.y
+						else
+
+							-- Move Down then Left
+
+							from
+								i := starfighter.x
+							until
+								i < row
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_x (starfighter.x - 1)
+
+									if starfighter.x > 1 then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i - 1
+							end
+
+							from
+								i := starfighter.y
+							until
+								i < column
+							loop
+								grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := '_'
+
+									starfighter.set_y (starfighter.y - 1)
+
+									if starfighter.y > 1 then
+
+										if grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) = '*' then
+											-- Game Over
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'X'
+											new_collided_x := starfighter.x
+											new_collided_y := starfighter.y
+											still_alive := false
+											currently_playing := false
+
+										else
+											grid_elements.at (((starfighter.x - 1) * col_size) + starfighter.y) := 'S'
+										end
+									end
+								i := i - 1
+							end
+						end
+					end
+
+					if still_alive = true then
+						operation_message := "The Starfighter moves: [" + old_collided_x.out + "," + old_collided_y.out + "] -> [" + row.out + "," + column.out + "]"
+					else
+						operation_message := "The Starfighter moves and collides with a projectile: [" + old_collided_x.out + "," + old_collided_y.out + "] -> [" + new_collided_x.out + "," + new_collided_y.out + "]"
+					end
+				end
+			end
+		end
+
+	fire
+		do
+			if currently_playing = false then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Not in game."
+			else
+				-- Part 1
+				turn_first_part
+
+				is_error := false
+				valid_command_count := valid_command_count + 1
+
+				-- Part 2
+				if still_alive = true then
+					projectiles.force (create {PROJECTILE}.make (starfighter.x, starfighter.y + 1))
+					if projectiles.at (projectiles.count).y <= col_size then
+						grid_elements.at (((projectiles.at (projectiles.count).x - 1) * col_size) + projectiles.at (projectiles.count).y) := '*'
+					end
+					operation_message.append ("The Starfighter fires a projectile at: [" + projectiles.at (projectiles.count).x.out + "," + projectiles.at (projectiles.count).y.out + "]")
+				end
+			end
+		end
+
+	pass
+		do
+			if currently_playing = false then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Not in game."
+			else
+				-- Part 1
+				turn_first_part
+
+				is_error := false
+				valid_command_count := valid_command_count + 1
+
+				-- Part 2
+				if still_alive = true then
+					operation_message.append ("The Starfighter stays at: [" + starfighter.x.out + "," + starfighter.y.out + "]")
+				end
+			end
+		end
+
+	turn_first_part
+		local
+			i, j : INTEGER
+			old_y, old_collided_x, old_collided_y, new_collided_x, new_collided_y : INTEGER
+		do
+			operation_message := ""
+
+			from
+				i := 1
+			until
+				i > projectiles.count
+			loop
+					old_y := projectiles.at (i).y
+
+					if still_alive = true then
+						old_collided_x := projectiles.at (i).x
+						old_collided_y := projectiles.at (i).y
+					end
+
+					from
+						j := 1
+					until
+						j > project_move
+					loop
+						grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) := '_'
+
+						projectiles.at (i).set_y (projectiles.at (i).y + 1)
+
+						if projectiles.at (i).y <= col_size then
+
+							if grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) = 'S' then
+								-- Game Over
+								grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) := 'X'
+								new_collided_x := projectiles.at (i).x
+								new_collided_y := projectiles.at (i).y
+								still_alive := false
+								currently_playing := false
+							else
+								grid_elements.at (((projectiles.at (i).x - 1) * col_size) + projectiles.at (i).y) := '*'
+							end
+						end
+					end
+					operation_message.append ("A projectile moves: [" + grid_char_rows.at (projectiles.at (i).x).out + "," + old_y.out + "] -> [" + grid_char_rows.at (projectiles.at (i).x).out + "," + projectiles.at (i).y.out + "]%N")
+			end
+
+			if still_alive = false then
+				operation_message.append ("A projectile moves and collides with the Starfighter: [" + old_collided_x.out + "," + old_collided_y.out + "] -> [" + new_collided_x.out + "," + new_collided_y.out + "]")
+			end
+		end
 
 end
