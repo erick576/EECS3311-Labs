@@ -248,7 +248,7 @@ feature -- Output Displays
 					still_alive := true
 				end
 
-				-- Display aftermath of turn
+				operation_message.make_empty
 			end
 		end
 
@@ -287,6 +287,7 @@ feature {ETF_COMMAND} -- commands to implement
 				still_alive := true
 				error_count := 0
 				valid_command_count := valid_command_count + 1
+				error_count := 0
 				operation_message := "  " + "Game has been exited."
 			end
 		end
@@ -337,6 +338,7 @@ feature {ETF_COMMAND} -- commands to implement
 
 				is_error := false
 				valid_command_count := valid_command_count + 1
+				error_count := 0
 
 				-- Part 2
 				if still_alive = true then
@@ -744,6 +746,7 @@ feature {ETF_COMMAND} -- commands to implement
 
 				is_error := false
 				valid_command_count := valid_command_count + 1
+				error_count := 0
 
 				-- Part 2
 				if still_alive = true then
@@ -768,6 +771,7 @@ feature {ETF_COMMAND} -- commands to implement
 
 				is_error := false
 				valid_command_count := valid_command_count + 1
+				error_count := 0
 
 				-- Part 2
 				if still_alive = true then

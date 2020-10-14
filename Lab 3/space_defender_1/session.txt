@@ -1,4 +1,2 @@
-play(5, 15, 15, 3)
-fire
-move(B, 5)
-move(C, 10)
+play(5, 10, 5, 1)
+play(5, 10, 5, 1)
