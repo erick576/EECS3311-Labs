@@ -203,12 +203,12 @@ feature -- Output Displays
 
 				-- Display Operations or errors
 				if is_error = true then
-					Result.append(error_message)
+					Result.append("  " + error_message)
 					Result.append("%N")
 				end
 
 				-- Display The grid is playing
-				if currently_playing = true then
+				if currently_playing = true and is_error = false then
 					Result.append(display_grid)
 				end
 
