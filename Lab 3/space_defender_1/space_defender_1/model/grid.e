@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 			operation_message := "Welcome to Space Defender Version 1."
 			game_over_message := "The game is over. Better luck next time!"
 			create error_message.make_empty
+
+			create grid_data.make
+			create history.make
 		end
 
 	reset (row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
@@ -99,9 +102,37 @@ feature {NONE} -- Attributes
 	game_over_message : STRING
 
 
-feature {NONE} -- queries
+feature -- Undo / Redo Attributes
+
+	history : HISTORY
+	grid_data : GRID_DATA
 
 feature -- Helpers
+
+	update_state (data : GRID_DATA)
+		local
+			state_grid : ARRAY[CHARACTER]
+		do
+
+			starfighter := data.get_starfighter
+			projectiles := data.get_projectiles
+
+			valid_command_count := data.get_valid_command_count
+			error_count := data.get_error_count
+
+			state_grid := data.get_grid_elements
+
+			grid_elements.clear_all
+			grid_elements.make_from_array (state_grid)
+
+			currently_playing := data.get_currently_playing
+			is_error := data.get_is_error
+			still_alive := data.get_still_alive
+
+			operation_message := data.get_operation_message
+			error_message := data.get_error_message
+
+		end
 
 	-- Decode the enumeration for the row letters
 	decode (num: INTEGER_32) : INTEGER_32
@@ -139,6 +170,11 @@ feature -- Helpers
 			else
 				Result := num
 			end
+		end
+
+	did_error_occur : BOOLEAN
+		do
+			Result := is_error
 		end
 
 feature -- Output Displays
@@ -248,11 +284,15 @@ feature -- Output Displays
 					still_alive := true
 				end
 
+				if still_alive = false or currently_playing = false then
+					history.remove_all
+				end
+
 				operation_message.make_empty
 			end
 		end
 
-feature {ETF_COMMAND} -- commands to implement
+feature {OPERATION} -- commands to implement
 
 	play (row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
 		do
@@ -271,26 +311,17 @@ feature {ETF_COMMAND} -- commands to implement
 				reset (row, column, player_mov, project_mov)
 				valid_command_count := valid_command_count + 1
 				error_count := 0
+
+				grid_data.set_counters (0, valid_command_count)
+				grid_data.set_error_message (create {STRING}.make_empty)
+				grid_data.set_grid (grid_elements.deep_twin)
+				grid_data.set_operation_message (operation_message.deep_twin)
+				grid_data.set_player_status (currently_playing, is_error, still_alive)
+				grid_data.set_projectiles (projectiles.deep_twin)
+				grid_data.set_starfighter (starfighter.deep_twin)
 			end
 		end
 
-	abort
-		do
-			if currently_playing = false then
-				is_error := true
-				still_alive := true
-				error_count := error_count + 1
-				error_message := "Not in game."
-			else
-				currently_playing := false
-				is_error := false
-				still_alive := true
-				error_count := 0
-				valid_command_count := valid_command_count + 1
-				error_count := 0
-				operation_message := "  " + "Game has been exited."
-			end
-		end
 
 	move (row: INTEGER_32 ; column: INTEGER_32)
 		local
@@ -731,6 +762,15 @@ feature {ETF_COMMAND} -- commands to implement
 						operation_message.append ("  " + "The Starfighter moves and collides with a projectile: [" + grid_char_rows.at (old_collided_x).out + "," + old_collided_y.out + "] -> [" + grid_char_rows.at (new_collided_x).out + "," + new_collided_y.out + "]")
 					end
 				end
+
+				grid_data.set_counters (0, valid_command_count)
+				grid_data.set_error_message (create {STRING}.make_empty)
+				grid_data.set_grid (grid_elements.deep_twin)
+				grid_data.set_operation_message (operation_message.deep_twin)
+				grid_data.set_player_status (currently_playing, is_error, still_alive)
+				grid_data.set_projectiles (projectiles.deep_twin)
+				grid_data.set_starfighter (starfighter.deep_twin)
+
 			end
 		end
 
@@ -756,6 +796,15 @@ feature {ETF_COMMAND} -- commands to implement
 					end
 					operation_message.append ("  " + "The Starfighter fires a projectile at: [" + grid_char_rows.at (starfighter.x).out + "," + starfighter.y.out + "]")
 				end
+
+				grid_data.set_counters (0, valid_command_count)
+				grid_data.set_error_message (create {STRING}.make_empty)
+				grid_data.set_grid (grid_elements.deep_twin)
+				grid_data.set_operation_message (operation_message.deep_twin)
+				grid_data.set_player_status (currently_playing, is_error, still_alive)
+				grid_data.set_projectiles (projectiles.deep_twin)
+				grid_data.set_starfighter (starfighter.deep_twin)
+
 			end
 		end
 
@@ -777,6 +826,67 @@ feature {ETF_COMMAND} -- commands to implement
 				if still_alive = true then
 					operation_message.append ("  " + "The Starfighter stays at: [" + grid_char_rows.at (starfighter.x).out + "," + starfighter.y.out + "]")
 				end
+
+				grid_data.set_counters (0, valid_command_count)
+				grid_data.set_error_message (create {STRING}.make_empty)
+				grid_data.set_grid (grid_elements.deep_twin)
+				grid_data.set_operation_message (operation_message.deep_twin)
+				grid_data.set_player_status (currently_playing, is_error, still_alive)
+				grid_data.set_projectiles (projectiles.deep_twin)
+				grid_data.set_starfighter (starfighter.deep_twin)
+
+			end
+		end
+
+feature -- Non Undoable or Redoable Commands
+
+	undo
+		do
+			if currently_playing = false then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Not in game."
+			elseif history.is_first then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Nothing left to undo."
+			else
+				history.item.undo
+				history.back
+			end
+		end
+
+	redo
+		do
+			if currently_playing = false then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Not in game."
+			elseif history.is_last then
+				is_error := true
+				error_count := error_count + 1
+				error_message := "Nothing left to redo."
+			else
+				history.forth
+				history.item.redo
+			end
+		end
+
+	abort
+		do
+			if currently_playing = false then
+				is_error := true
+				still_alive := true
+				error_count := error_count + 1
+				error_message := "Not in game."
+			else
+				currently_playing := false
+				is_error := false
+				still_alive := true
+				error_count := 0
+				valid_command_count := valid_command_count + 1
+				error_count := 0
+				operation_message := "  " + "Game has been exited."
 			end
 		end
 
