@@ -1,7 +1,12 @@
-play(5, 10, 5, 1)
-fire
+play(5, 10, 5,1)
 undo
 redo
-fire
 undo
-abort
+move(A, 3)
+move(J,5)
+undo
+move(B,3)
+undo
+redo
+undo
+redo

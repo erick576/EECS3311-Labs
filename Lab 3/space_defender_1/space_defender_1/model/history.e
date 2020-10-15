@@ -29,11 +29,9 @@ feature -- features
 
 	put(operation : OPERATION)
 		do
-			remove_all_right
+			if not is_last then remove_all_right end
 			history.force (operation)
 			history.finish
-		ensure
-			history.at (history.count) = operation
 		end
 
 	remove_all
@@ -89,15 +87,13 @@ feature -- features
 
 	remove_all_right
 		do
-			if on_item then
-				from
-					history.forth
-				until
-					history.after
-				loop
-					history.remove
-				end
+			from
+				history.forth
+			until
+				history.after
+			loop
+				history.remove
 			end
 		end
-
+		
 end

@@ -110,27 +110,22 @@ feature -- Undo / Redo Attributes
 feature -- Helpers
 
 	update_state (data : GRID_DATA)
-		local
-			state_grid : ARRAY[CHARACTER]
 		do
 
-			starfighter := data.get_starfighter
-			projectiles := data.get_projectiles
+			starfighter := data.get_starfighter.deep_twin
+			projectiles := data.get_projectiles.deep_twin
 
 			valid_command_count := data.get_valid_command_count
 			error_count := data.get_error_count
 
-			state_grid := data.get_grid_elements
-
-			grid_elements.clear_all
-			grid_elements.make_from_array (state_grid)
+			grid_elements := data.get_grid_elements.deep_twin
 
 			currently_playing := data.get_currently_playing
 			is_error := data.get_is_error
 			still_alive := data.get_still_alive
 
-			operation_message := data.get_operation_message
-			error_message := data.get_error_message
+			operation_message := data.get_operation_message.deep_twin
+			error_message := data.get_error_message.deep_twin
 
 		end
 
@@ -260,6 +255,17 @@ feature -- Output Displays
 				Result.append("  " + operation_message)
 
 			else
+				-- Update GRID_DATA
+				if still_alive = true and is_error = false then
+					grid_data.set_counters (0, valid_command_count)
+					grid_data.set_error_message (create {STRING}.make_empty)
+					grid_data.set_grid (grid_elements.deep_twin)
+					grid_data.set_operation_message (operation_message.deep_twin)
+					grid_data.set_player_status (currently_playing, is_error, still_alive)
+					grid_data.set_projectiles (projectiles.deep_twin)
+					grid_data.set_starfighter (starfighter.deep_twin)
+				end
+
 				-- Display the state
 				Result.append(display_state)
 
@@ -311,14 +317,6 @@ feature {OPERATION} -- commands to implement
 				reset (row, column, player_mov, project_mov)
 				valid_command_count := valid_command_count + 1
 				error_count := 0
-
-				grid_data.set_counters (0, valid_command_count)
-				grid_data.set_error_message (create {STRING}.make_empty)
-				grid_data.set_grid (grid_elements.deep_twin)
-				grid_data.set_operation_message (operation_message.deep_twin)
-				grid_data.set_player_status (currently_playing, is_error, still_alive)
-				grid_data.set_projectiles (projectiles.deep_twin)
-				grid_data.set_starfighter (starfighter.deep_twin)
 			end
 		end
 
@@ -762,15 +760,6 @@ feature {OPERATION} -- commands to implement
 						operation_message.append ("  " + "The Starfighter moves and collides with a projectile: [" + grid_char_rows.at (old_collided_x).out + "," + old_collided_y.out + "] -> [" + grid_char_rows.at (new_collided_x).out + "," + new_collided_y.out + "]")
 					end
 				end
-
-				grid_data.set_counters (0, valid_command_count)
-				grid_data.set_error_message (create {STRING}.make_empty)
-				grid_data.set_grid (grid_elements.deep_twin)
-				grid_data.set_operation_message (operation_message.deep_twin)
-				grid_data.set_player_status (currently_playing, is_error, still_alive)
-				grid_data.set_projectiles (projectiles.deep_twin)
-				grid_data.set_starfighter (starfighter.deep_twin)
-
 			end
 		end
 
@@ -796,15 +785,6 @@ feature {OPERATION} -- commands to implement
 					end
 					operation_message.append ("  " + "The Starfighter fires a projectile at: [" + grid_char_rows.at (starfighter.x).out + "," + starfighter.y.out + "]")
 				end
-
-				grid_data.set_counters (0, valid_command_count)
-				grid_data.set_error_message (create {STRING}.make_empty)
-				grid_data.set_grid (grid_elements.deep_twin)
-				grid_data.set_operation_message (operation_message.deep_twin)
-				grid_data.set_player_status (currently_playing, is_error, still_alive)
-				grid_data.set_projectiles (projectiles.deep_twin)
-				grid_data.set_starfighter (starfighter.deep_twin)
-
 			end
 		end
 
@@ -826,15 +806,6 @@ feature {OPERATION} -- commands to implement
 				if still_alive = true then
 					operation_message.append ("  " + "The Starfighter stays at: [" + grid_char_rows.at (starfighter.x).out + "," + starfighter.y.out + "]")
 				end
-
-				grid_data.set_counters (0, valid_command_count)
-				grid_data.set_error_message (create {STRING}.make_empty)
-				grid_data.set_grid (grid_elements.deep_twin)
-				grid_data.set_operation_message (operation_message.deep_twin)
-				grid_data.set_player_status (currently_playing, is_error, still_alive)
-				grid_data.set_projectiles (projectiles.deep_twin)
-				grid_data.set_starfighter (starfighter.deep_twin)
-
 			end
 		end
 
