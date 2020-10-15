@@ -1,0 +1,6 @@
+play(5, 10, 5, 1)
+fire
+move(A, 3)
+move(C, 4)
+undo
+

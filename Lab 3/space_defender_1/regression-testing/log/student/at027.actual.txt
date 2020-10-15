@@ -1,27 +1,27 @@
   Welcome to Space Defender Version 1.
 ->undo
-  state:0.0, ok
-Welcome to Space Defender Version 1.
-->redo
-  state:0.0, ok
-
-->fire
   state:0.1, error
   Not in game.
-->fire
+->redo
   state:0.2, error
   Not in game.
+->fire
+  state:0.3, error
+  Not in game.
+->fire
+  state:0.4, error
+  Not in game.
 ->pass
-  state:0.3, error
+  state:0.5, error
   Not in game.
 ->undo
-  state:0.3, error
+  state:0.6, error
   Not in game.
 ->undo
-  state:0.3, error
+  state:0.7, error
   Not in game.
 ->redo
-  state:0.3, error
+  state:0.8, error
   Not in game.
 ->play(5,10,5,1)
   state:1.0, ok
@@ -32,29 +32,14 @@ Welcome to Space Defender Version 1.
     D _  _  _  _  _  _  _  _  _  _
     E _  _  _  _  _  _  _  _  _  _
 ->undo
-  state:1.0, ok
-      1  2  3  4  5  6  7  8  9 10
-    A _  _  _  _  _  _  _  _  _  _
-    B _  _  _  _  _  _  _  _  _  _
-    C S  _  _  _  _  _  _  _  _  _
-    D _  _  _  _  _  _  _  _  _  _
-    E _  _  _  _  _  _  _  _  _  _
+  state:1.1, error
+  Nothing left to undo.
 ->redo
-  state:1.0, ok
-      1  2  3  4  5  6  7  8  9 10
-    A _  _  _  _  _  _  _  _  _  _
-    B _  _  _  _  _  _  _  _  _  _
-    C S  _  _  _  _  _  _  _  _  _
-    D _  _  _  _  _  _  _  _  _  _
-    E _  _  _  _  _  _  _  _  _  _
+  state:1.2, error
+  Nothing left to redo.
 ->undo
-  state:1.0, ok
-      1  2  3  4  5  6  7  8  9 10
-    A _  _  _  _  _  _  _  _  _  _
-    B _  _  _  _  _  _  _  _  _  _
-    C S  _  _  _  _  _  _  _  _  _
-    D _  _  _  _  _  _  _  _  _  _
-    E _  _  _  _  _  _  _  _  _  _
+  state:1.3, error
+  Nothing left to undo.
 ->move(A,3)
   state:2.0, ok
   The Starfighter moves: [C,1] -> [A,3]
@@ -71,11 +56,16 @@ Welcome to Space Defender Version 1.
   state:2.2, error
   The location to move to is outside of the board.
 ->undo
-  state:2.2, error
-  The location to move to is outside of the board.
+  state:1.0, ok
+      1  2  3  4  5  6  7  8  9 10
+    A _  _  _  _  _  _  _  _  _  _
+    B _  _  _  _  _  _  _  _  _  _
+    C S  _  _  _  _  _  _  _  _  _
+    D _  _  _  _  _  _  _  _  _  _
+    E _  _  _  _  _  _  _  _  _  _
 ->move(B,3)
-  state:3.0, ok
-  The Starfighter moves: [A,3] -> [B,3]
+  state:2.0, ok
+  The Starfighter moves: [C,1] -> [B,3]
       1  2  3  4  5  6  7  8  9 10
     A _  _  _  _  _  _  _  _  _  _
     B _  _  S  _  _  _  _  _  _  _
@@ -83,10 +73,5 @@ Welcome to Space Defender Version 1.
     D _  _  _  _  _  _  _  _  _  _
     E _  _  _  _  _  _  _  _  _  _
 ->redo
-  state:3.0, ok
-      1  2  3  4  5  6  7  8  9 10
-    A _  _  _  _  _  _  _  _  _  _
-    B _  _  S  _  _  _  _  _  _  _
-    C _  _  _  _  _  _  _  _  _  _
-    D _  _  _  _  _  _  _  _  _  _
-    E _  _  _  _  _  _  _  _  _  _
+  state:2.1, error
+  Nothing left to redo.

@@ -1,0 +1,45 @@
+undo
+undo
+redo
+redo
+play(5, 10, 5, 2)
+fire
+move(A, 1)
+fire
+move(D, 1)
+fire
+undo
+redo
+pass
+pass
+pass
+pass
+pass
+pass
+pass
+pass
+undo
+undo
+undo
+undo
+undo
+undo
+undo
+undo
+fire
+fire
+fire
+fire
+fire
+fire
+undo
+undo
+undo
+undo
+undo
+undo
+fire
+redo
+undo
+undo
+abort

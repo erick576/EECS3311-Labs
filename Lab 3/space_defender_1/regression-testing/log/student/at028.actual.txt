@@ -28,5 +28,5 @@
     E _  _  _  _  _  _  _  _  _  _  _  _  _  _  _  _  _  _  _  _
   The game is over. Better luck next time!
 ->undo
-  state:3.0, ok
-
+  state:3.1, error
+  Not in game.
