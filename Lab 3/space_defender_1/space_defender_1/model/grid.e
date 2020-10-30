@@ -298,7 +298,7 @@ feature -- Output Displays
 			end
 		end
 
-feature {OPERATION} -- commands to implement
+feature {OPERATION} -- Stored Commands
 
 	play (row: INTEGER_32 ; column: INTEGER_32 ; player_mov: INTEGER_32 ; project_mov: INTEGER_32)
 		do
@@ -809,7 +809,7 @@ feature {OPERATION} -- commands to implement
 			end
 		end
 
-feature -- Non Undoable or Redoable Commands
+feature -- Non Stored Commands
 
 	undo
 		do

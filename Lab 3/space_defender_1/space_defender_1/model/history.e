@@ -21,7 +21,7 @@ feature {NONE} -- Attributes
 	history: LIST[OPERATION]
 
 
-feature -- features
+feature -- commands
 
 	-- For the history list a type SOME_LIST was posited, with features put, empty, before, is_
 	-- first, is_last, back, forth, item and remove_all_right. (There is also on_item, expressed in
@@ -95,5 +95,5 @@ feature -- features
 				history.remove
 			end
 		end
-		
+
 end
